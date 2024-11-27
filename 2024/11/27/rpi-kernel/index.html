@@ -14,7 +14,7 @@
   
   
   <title>
-    友情链接 |
+    基于树莓派4B本地驱动编译的环境搭建 |
     
     TLX的主页
   </title>
@@ -29,19 +29,23 @@
 
   
   
-    <meta name="description" content="本站信息 站名： 拔剑Sketon 站长： 拔剑Sketon 地址： https:&#x2F;&#x2F;d-sketon.top&#x2F; 备用地址：https:&#x2F;&#x2F;d-sketon.github.io&#x2F;  申请方法 添加本站后，在本页留言，格式如下  123456&#96;&#96;&#96;yml- name: #您的名字  url: #您的网址  desc: #简短描述  image: #一张图片&#96;&#96;&#96;  小伙伴们">
-<meta property="og:type" content="website">
-<meta property="og:title" content="友情链接">
-<meta property="og:url" content="http://tlxchen.github.io/friend/index.html">
+    <meta name="description" content="前言说实话，这个环境搭建真的要把我折磨死了（虽然是因为我对驱动编译的流程太不熟悉了），最终在11月27日的上午实现第一个helloworld驱动，泪目了。其实本来打算做交叉编译的，不断在网上找教程搞了一周也没弄出来，这才意识到自己好像有点太急了，于是降低目标，进行树莓派本地驱动编译环境搭建。  所需准备对于驱动编译，你首先得有  内核源码,而且必须与你当前内核版本相同编译工具，本地编译还挺容易获取">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于树莓派4B本地驱动编译的环境搭建">
+<meta property="og:url" content="http://tlxchen.github.io/2024/11/27/rpi-kernel/index.html">
 <meta property="og:site_name" content="TLX的主页">
-<meta property="og:description" content="本站信息 站名： 拔剑Sketon 站长： 拔剑Sketon 地址： https:&#x2F;&#x2F;d-sketon.top&#x2F; 备用地址：https:&#x2F;&#x2F;d-sketon.github.io&#x2F;  申请方法 添加本站后，在本页留言，格式如下  123456&#96;&#96;&#96;yml- name: #您的名字  url: #您的网址  desc: #简短描述  image: #一张图片&#96;&#96;&#96;  小伙伴们">
+<meta property="og:description" content="前言说实话，这个环境搭建真的要把我折磨死了（虽然是因为我对驱动编译的流程太不熟悉了），最终在11月27日的上午实现第一个helloworld驱动，泪目了。其实本来打算做交叉编译的，不断在网上找教程搞了一周也没弄出来，这才意识到自己好像有点太急了，于是降低目标，进行树莓派本地驱动编译环境搭建。  所需准备对于驱动编译，你首先得有  内核源码,而且必须与你当前内核版本相同编译工具，本地编译还挺容易获取">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://tlxchen.github.io/images/banner.webp">
-<meta property="article:published_time" content="2024-11-12T10:24:27.053Z">
-<meta property="article:modified_time" content="2024-11-10T13:45:24.000Z">
+<meta property="og:image" content="http://tlxchen.github.io/2024/11/27/rpi-kernel/01.png">
+<meta property="og:image" content="http://tlxchen.github.io/2024/11/27/rpi-kernel/02.png">
+<meta property="og:image" content="http://tlxchen.github.io/2024/11/27/rpi-kernel/03.png">
+<meta property="og:image" content="http://tlxchen.github.io/2024/11/27/rpi-kernel/04.png">
+<meta property="og:image" content="http://tlxchen.github.io/2024/11/27/rpi-kernel/05.png">
+<meta property="article:published_time" content="2024-11-27T02:38:25.000Z">
+<meta property="article:modified_time" content="2024-11-27T04:42:52.827Z">
 <meta property="article:author" content="挺凉歙">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://tlxchen.github.io/images/banner.webp">
+<meta name="twitter:image" content="http://tlxchen.github.io/2024/11/27/rpi-kernel/01.png">
   
   
     <link rel="alternate" href="/atom.xml" title="TLX的主页" type="application/atom+xml">
@@ -152,7 +156,7 @@
 <header id="header">
   
     
-      <img fetchpriority="high" src="/images/banner.webp" alt="友情链接">
+      <img fetchpriority="high" src="/images/banner.webp" alt="基于树莓派4B本地驱动编译的环境搭建">
     
   
   <div id="header-outer">
@@ -161,7 +165,7 @@
         
         
           <a href="/" id="logo">
-            <h1 data-aos="slide-up">友情链接</h1>
+            <h1 data-aos="slide-up">基于树莓派4B本地驱动编译的环境搭建</h1>
           </a>
         
       
@@ -177,13 +181,13 @@
 
         <div id="content">
           
-          <section id="main"><article id="page-" class="h-entry article article-type-page" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+          <section id="main"><article id="post-rpi-kernel" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-inner" data-aos="fade-up">
     <div class="article-meta">
       <div class="article-date">
-  <a href="/friend/index.html" class="article-date-link" data-aos="zoom-in">
-    <time datetime="2024-11-12T10:24:27.053Z" itemprop="datePublished">2024-11-12</time>
-    <time style="display: none;" id="post-update-time">2024-11-10</time>
+  <a href="/2024/11/27/rpi-kernel/" class="article-date-link" data-aos="zoom-in">
+    <time datetime="2024-11-27T02:38:25.000Z" itemprop="datePublished">2024-11-27</time>
+    <time style="display: none;" id="post-update-time">2024-11-27</time>
   </a>
 </div>
 
@@ -196,33 +200,53 @@
     <div class="e-content article-entry" itemprop="articleBody">
       
       
-        <h2 id="本站信息"><a href="#本站信息" class="headerlink" title="本站信息"></a>本站信息</h2><ul>
-<li>站名： 拔剑Sketon</li>
-<li>站长： 拔剑Sketon</li>
-<li>地址： <a target="_blank" rel="noopener" href="https://d-sketon.top/">https://d-sketon.top/</a></li>
-<li>备用地址：<a target="_blank" rel="noopener" href="https://d-sketon.github.io/">https://d-sketon.github.io/</a></li>
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>说实话，这个环境搭建真的要把我折磨死了（虽然是因为我对驱动编译的流程太不熟悉了），最终在11月27日的上午实现第一个helloworld驱动，泪目了。<br>其实本来打算做交叉编译的，不断在网上找教程搞了一周也没弄出来，这才意识到自己好像有点太急了，于是降低目标，进行树莓派本地驱动编译环境搭建。 </p>
+<h1 id="所需准备"><a href="#所需准备" class="headerlink" title="所需准备"></a>所需准备</h1><p>对于驱动编译，你首先得有</p>
+<blockquote>
+<p>内核源码,而且必须与你当前内核版本相同<br>编译工具，本地编译还挺容易获取的，但是如果是交叉编译的话，得自己去找。</p>
+</blockquote>
+<h1 id="内核源码获取"><a href="#内核源码获取" class="headerlink" title="内核源码获取"></a>内核源码获取</h1><p>正常来说，从官网获与你当前内核版本相同的源码即可，但是我并没有成功，于是我将从官网下载的内核源码编译并生成了一个新内核，然后替换当前内核，<br>这样我的内核版本和源码就是是相同版本了（这在有些教程中是有的，不过我刚开始一直不明白为啥也替换内核，导致走了很多弯路）。  </p>
+<p>首先在树莓派中执行</p>
+<blockquote>
+<p>uname -r<br><img src="/2024/11/27/rpi-kernel/01.png"></p>
+</blockquote>
+<p>这就是你当前内核的版本，然后到<a target="_blank" rel="noopener" href="https://github.com/raspberrypi/">官网</a>的Linux下点开<img src="/2024/11/27/rpi-kernel/02.png"><br>然后选项对应的版本，下载ZIP，然后通过U盘或者FTP等把ZIP传到树莓派中。</p>
+<blockquote>
+<p>补充：其实我最开始 <code>uname -r</code> 出来的版本是6.6.51 然后使用rpi-6.6.y的内核源码编译通过了，最后在加载驱动的时候出现了<code>insmod: ERROR: could not insert module hellodriver.ko: Invalid module format</code> ,一搜说可能是内核<br>版本和源码不同。</p>
+</blockquote>
+<p>在树莓派中将源码解压到 <code>/usr/src/</code> 目录下，现在源码就已经有辣。</p>
+<blockquote>
+<p>unzip rpi-6.6.y.zip -d &#x2F;usr&#x2F;src&#x2F;<br>unzip zip_file -d &#x2F;path&#x2F;to&#x2F;directory	指定解压文件的目标目录</p>
+</blockquote>
+<h1 id="编译工具获取"><a href="#编译工具获取" class="headerlink" title="编译工具获取"></a>编译工具获取</h1><p>【注】我觉得这可能是交叉编译所用的，因为后面构建内核并没有指定编译器，目前还没搞清楚。<br>此处暂无交叉编译工具获取教程，我还没试过，等后面再弄。<br>首先确定当前树莓派系统是32位还是64位，可以看到是64位的。</p>
+<blockquote>
+<p>getconf LONG_BIT<br><img src="/2024/11/27/rpi-kernel/03.png"></p>
+</blockquote>
+<p>32位就用树莓派自带的arm编译器&#x2F;usr&#x2F;bin&#x2F;arm-linux-gnueabihf-xxx；64位用&#x2F;usr&#x2F;bin&#x2F;aarch64-linux-gnu-xxx</p>
+<h1 id="构建内核"><a href="#构建内核" class="headerlink" title="构建内核"></a>构建内核</h1><p><a target="_blank" rel="noopener" href="https://pidoc.cn/docs/computers/linux-kernel">参考连接</a></p>
+<ul>
+<li><p>首先对内核进行配置，一般使用厂家的config配置文件。<br>进入内核源码目录 <code>cd /usr/src/rpi-6.6.y/</code>  <a target="_blank" rel="noopener" href="https://pidoc.cn/docs/computers/linux-kernel#%E5%87%86%E5%A4%87%E9%85%8D%E7%BD%AE">配置内核参考连接</a> </p>
+<blockquote>
+<p>KERNEL&#x3D;kernel8<br>make bcm2711_defconfig </p>
+</blockquote>
+<p>然后会在当前目录生成一个<code>.config</code>文件，里面就是内核相关配置。为了<br>在替换完内核后，防止内核覆盖 &#x2F;lib&#x2F;modules 中的现有模块，在 <code>uname</code><br>输出中说明运行的是自己的内核,打开<code>.config</code>文件，修改下面一行，在后面添加<code>-MY_CUSTOM_KERNEL</code></p>
+<blockquote>
+<p>CONFIG_LOCALVERSION&#x3D;”-v8l-MY_CUSTOM_KERNEL”</p>
+</blockquote>
+</li>
+<li><p>进行构建内核。这可能要花上两个多小时<img src="/2024/11/27/rpi-kernel/04.png"><br>我执行的是<code> sudo ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make -j6 Image.gz modules dtbs</code></p>
+</li>
+<li><p>然后接下来，将内核模块安装到启动媒体上：<code>sudo make -j6 modules_install</code>。一定要有这一步，<br>如果没有这一步树莓派就没有一些基础的驱动。</p>
+</li>
+<li><p>安装内核,我是64位的。<img src="/2024/11/27/rpi-kernel/05.png"><br>第3句命令可能需要改以下：让那些文件复制到一个备份文件夹内 <code>sudo cp arch/arm64/boot/dts/broadcom/*.dtb /boot/firmware/$KERNEL-backup2/</code></p>
+<blockquote>
+<p><code>sudo cp /boot/firmware/$KERNEL.img /boot/firmware/$KERNEL-backup.img   sudo cp arch/arm64/boot/Image.gz /boot/firmware/$KERNEL.img   sudo cp arch/arm64/boot/dts/broadcom/*.dtb /boot/firmware/$KERNEL-backup2/   sudo cp arch/arm64/boot/dts/overlays/*.dtb* /boot/firmware/overlays/   sudo cp arch/arm64/boot/dts/overlays/README /boot/firmware/overlays/</code>  </p>
+</blockquote>
+<p>然后重启设备<code>sudo reboot</code>。设备重启后，查看当前版本 <code>uname -r</code> 如果版本变成了CONFIG_LOCALVERSION设置的值，那么就成功了。<br>如果一直无法重启。可以将内存卡插入U盘，电脑读取U盘。然后在最顶层目录可以找到一个config.txt的文件，修改kernel <code>kernel=my-backup.img</code>,<br>my-backup.img为你刚才备份的<code>$KERNEL-backup.img </code>。这样系统又是原本的内核。</p>
+</li>
 </ul>
-<h2 id="申请方法"><a href="#申请方法" class="headerlink" title="申请方法"></a>申请方法</h2><ul>
-<li>添加本站后，在本页留言，格式如下</li>
-</ul>
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">```yml</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="comment">#您的名字</span></span><br><span class="line">  <span class="attr">url:</span> <span class="comment">#您的网址</span></span><br><span class="line">  <span class="attr">desc:</span> <span class="comment">#简短描述</span></span><br><span class="line">  <span class="attr">image:</span> <span class="comment">#一张图片</span></span><br><span class="line"><span class="string">```</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="小伙伴们"><a href="#小伙伴们" class="headerlink" title="小伙伴们"></a>小伙伴们</h2><div class="friend-wrap" data-aos="zoom-in"><div class="friend-item-wrap">
-    <a target="_blank" rel="noopener" href="https://d-sketon.github.io/"></a>
-    <div class="friend-icon-wrap">
-      <div class="friend-icon">
-          <img data-src="https://d-sketon.github.io/avatar/avatar.webp" data-sizes="auto" alt="D-Sketon" class="lazyload">
-      </div>
-    </div>
-    <div class="friend-info-wrap">
-      <div class="friend-name">
-          D-Sketon 
-      </div>
-      <div class="friend-desc">
-        一个车万人
-      </div>
-    </div>
-  </div></div>
+<h1 id="编译hello驱动"><a href="#编译hello驱动" class="headerlink" title="编译hello驱动"></a>编译hello驱动</h1><pre><code>待写...
+</code></pre>
 
       
     </div>
@@ -240,6 +264,27 @@
   </div>
   
     
+  <nav id="article-nav" data-aos="fade-up">
+    
+    
+    <div class="article-nav-link-wrap article-nav-link-right">
+      
+        
+        
+          <img data-src="https://d-sketon.top/img/backimg/bg1.jpg" data-sizes="auto" alt="使用FileZila与Linux传输文件" class="lazyload">
+        
+      
+      <a href="/2024/11/23/FTP-file/"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+        
+          使用FileZila与Linux传输文件
+        
+      </h3>
+    </div>
+    
+  </nav>
+
 
   
 </article>
@@ -252,10 +297,19 @@
 </section>
           
             <aside id="sidebar">
-  <div class="sidebar-wrapper ">
+  <div class="sidebar-wrapper wrap-sticky">
     <div class="sidebar-wrap" data-aos="fade-up">
       
-        <div class="sidebar-author">
+        <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%89%80%E9%9C%80%E5%87%86%E5%A4%87"><span class="toc-number">2.</span> <span class="toc-text">所需准备</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%86%85%E6%A0%B8%E6%BA%90%E7%A0%81%E8%8E%B7%E5%8F%96"><span class="toc-number">3.</span> <span class="toc-text">内核源码获取</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E5%B7%A5%E5%85%B7%E8%8E%B7%E5%8F%96"><span class="toc-number">4.</span> <span class="toc-text">编译工具获取</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%E5%86%85%E6%A0%B8"><span class="toc-number">5.</span> <span class="toc-text">构建内核</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BC%96%E8%AF%91hello%E9%A9%B1%E5%8A%A8"><span class="toc-number">6.</span> <span class="toc-text">编译hello驱动</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
   <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="挺凉歙" class="lazyload">
   <div class="sidebar-author-name">挺凉歙</div>
   <div class="sidebar-description"></div>
@@ -304,8 +358,13 @@
     </div>
   
 </div>
-
+</div>
       
+      
+        <div class="sidebar-btn-wrapper" style="position:static">
+          <div class="sidebar-toc-btn current"></div>
+          <div class="sidebar-common-btn"></div>
+        </div>
       
     </div>
   </div>
@@ -365,7 +424,16 @@
       <nav id="mobile-nav">
   <div class="sidebar-wrap">
     
-      <div class="sidebar-author">
+      <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%89%80%E9%9C%80%E5%87%86%E5%A4%87"><span class="toc-number">2.</span> <span class="toc-text">所需准备</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%86%85%E6%A0%B8%E6%BA%90%E7%A0%81%E8%8E%B7%E5%8F%96"><span class="toc-number">3.</span> <span class="toc-text">内核源码获取</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E5%B7%A5%E5%85%B7%E8%8E%B7%E5%8F%96"><span class="toc-number">4.</span> <span class="toc-text">编译工具获取</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%E5%86%85%E6%A0%B8"><span class="toc-number">5.</span> <span class="toc-text">构建内核</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BC%96%E8%AF%91hello%E9%A9%B1%E5%8A%A8"><span class="toc-number">6.</span> <span class="toc-text">编译hello驱动</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+      <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
   <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="挺凉歙" class="lazyload">
   <div class="sidebar-author-name">挺凉歙</div>
   <div class="sidebar-description"></div>
@@ -414,9 +482,14 @@
     </div>
   
 </div>
-
+</div>
     
   </div>
+  
+    <div class="sidebar-btn-wrapper">
+      <div class="sidebar-toc-btn current"></div>
+      <div class="sidebar-common-btn"></div>
+    </div>
   
 </nav>
 
