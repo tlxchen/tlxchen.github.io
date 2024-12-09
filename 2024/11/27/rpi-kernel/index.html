@@ -42,9 +42,8 @@
 <meta property="og:image" content="http://tlxchen.github.io/2024/11/27/rpi-kernel/04.png">
 <meta property="og:image" content="http://tlxchen.github.io/2024/11/27/rpi-kernel/05.png">
 <meta property="og:image" content="http://tlxchen.github.io/2024/11/27/rpi-kernel/07.jpg">
-<meta property="og:image" content="http://tlxchen.github.io/2024/11/27/rpi-kernel/08.jpg">
 <meta property="article:published_time" content="2024-11-27T02:38:25.000Z">
-<meta property="article:modified_time" content="2024-11-27T05:06:16.697Z">
+<meta property="article:modified_time" content="2024-12-08T05:49:06.619Z">
 <meta property="article:author" content="挺凉歙">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://tlxchen.github.io/2024/11/27/rpi-kernel/01.png">
@@ -189,7 +188,7 @@
       <div class="article-date">
   <a href="/2024/11/27/rpi-kernel/" class="article-date-link" data-aos="zoom-in">
     <time datetime="2024-11-27T02:38:25.000Z" itemprop="datePublished">2024-11-27</time>
-    <time style="display: none;" id="post-update-time">2024-11-27</time>
+    <time style="display: none;" id="post-update-time">2024-12-08</time>
   </a>
 </div>
 
@@ -224,7 +223,6 @@
 <blockquote>
 <p>getconf LONG_BIT<br><img src="03.png"></p>
 </blockquote>
-<p>32位就用树莓派自带的arm编译器&#x2F;usr&#x2F;bin&#x2F;arm-linux-gnueabihf-xxx；64位用&#x2F;usr&#x2F;bin&#x2F;aarch64-linux-gnu-xxx</p>
 <h1 id="构建内核"><a href="#构建内核" class="headerlink" title="构建内核"></a>构建内核</h1><p><a target="_blank" rel="noopener" href="https://pidoc.cn/docs/computers/linux-kernel">参考连接</a></p>
 <ul>
 <li><p>首先对内核进行配置，一般使用厂家的config配置文件。<br>进入内核源码目录 <code>cd /usr/src/rpi-6.6.y/</code>  <a target="_blank" rel="noopener" href="https://pidoc.cn/docs/computers/linux-kernel#%E5%87%86%E5%A4%87%E9%85%8D%E7%BD%AE">配置内核参考连接</a> </p>
@@ -236,7 +234,7 @@
 <p>CONFIG_LOCALVERSION&#x3D;”-v8l-MY_CUSTOM_KERNEL”</p>
 </blockquote>
 </li>
-<li><p>进行构建内核。这可能要花上两个多小时<img src="04.png"><br>我执行的是<code> sudo ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make -j6 Image.gz modules dtbs</code></p>
+<li><p>进行构建内核。这可能要花上两个多小时<img src="04.png"><br>我执行的是<code> sudo ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make -j6 Image.gz modules dtbs</code><br>其实如果你是直接在树莓派本地运行的话，是不用选择交叉编译器，即不指定CROSS_COMPILE。</p>
 </li>
 <li><p>然后接下来，将内核模块安装到启动媒体上：<code>sudo make -j6 modules_install</code>。一定要有这一步，<br>如果没有这一步树莓派就没有一些基础的驱动。</p>
 </li>
@@ -247,7 +245,7 @@
 <p>然后重启设备<code>sudo reboot</code>。设备重启后，查看当前版本 <code>uname -r</code> 如果版本变成了CONFIG_LOCALVERSION设置的值，那么就成功了。<br>如果一直无法重启。可以将内存卡插入U盘，电脑读取U盘。然后在最顶层目录可以找到一个config.txt的文件，修改kernel <code>kernel=my-backup.img</code>,<br>my-backup.img为你刚才备份的<code>$KERNEL-backup.img </code>。这样系统又是原本的内核。</p>
 </li>
 </ul>
-<h1 id="编译hello驱动"><a href="#编译hello驱动" class="headerlink" title="编译hello驱动"></a>编译hello驱动</h1><p>  <img src="07.jpg"> <img src="08.jpg"><br>    待写…</p>
+<h1 id="编译hello驱动"><a href="#编译hello驱动" class="headerlink" title="编译hello驱动"></a>编译hello驱动</h1><p>  <img src="07.jpg"><br>    待写…</p>
 
       
     </div>
@@ -266,6 +264,22 @@
   
     
   <nav id="article-nav" data-aos="fade-up">
+    
+      <div class="article-nav-link-wrap article-nav-link-left">
+        
+          
+          
+            <img data-src="https://d-sketon.top/img/backimg/bg1.jpg" data-sizes="auto" alt="linux驱动学习相关笔记" class="lazyload">
+          
+        
+        <a href="/2024/11/28/linux-md/"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">
+          
+            linux驱动学习相关笔记
+          
+        </h3>
+      </div>
     
     
     <div class="article-nav-link-wrap article-nav-link-right">
@@ -318,7 +332,7 @@
 <div class="sidebar-state">
   <div class="sidebar-state-article">
     <div>文章</div>
-    <div class="sidebar-state-number">4</div>
+    <div class="sidebar-state-number">6</div>
   </div>
   <div class="sidebar-state-category">
     <div>分类</div>
@@ -396,10 +410,10 @@
     
       <div>
         <span class="icon-brush"></span>
-        3.3k
+        4.8k
         &nbsp;|&nbsp;
         <span class="icon-coffee"></span>
-        00:11
+        00:18
       </div>
     
     
@@ -442,7 +456,7 @@
 <div class="sidebar-state">
   <div class="sidebar-state-article">
     <div>文章</div>
-    <div class="sidebar-state-number">4</div>
+    <div class="sidebar-state-number">6</div>
   </div>
   <div class="sidebar-state-category">
     <div>分类</div>

@@ -178,6 +178,82 @@
   <div class="post-wrapper">
   <div class="post-wrap-left" data-aos="fade-up">
     
+      <a class="post-link" href="/2024/12/08/gpio-md/" aria-label="树莓派4B-GPIO驱动"></a>
+    
+    
+    <div class="post-cover-left">
+      
+        
+        
+          <img data-src="https://d-sketon.top/img/backimg/bg1.jpg" data-sizes="auto" alt="树莓派4B-GPIO驱动" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2024-12-08</span>
+        <span><span class="icon-pencil"></span>1.4k 字</span>
+        <span><span class="icon-clock"></span>6 分钟</span>
+      </div>
+      <h2 class="post-title">树莓派4B-GPIO驱动</h2>
+      <article class="post-article">
+        
+          使用寄存器对GPIO进行操作首先我们要了解对GPIO操作的相关寄存器，树莓派4B使用的芯片是bcm2711，通过树莓派官网下载芯片手册。通过查看芯片手册了解到有如下几个寄存器
+
+GPFSELx：
+
+使用Linux内核提供的GPIO相关APIGPIO相关API介绍旧的方法：sysfs 接口。在 Linux 版本 4.7 之前，在用户空间中管理 GPIO 行的接口始终通过导出在 &amp;#x2F;sys&amp;#x2F;class&amp;#x2F;gpio 中的文件在 sysfs 中。在写GPIO驱动的时候，大多数使用的是以gpio开头的函数，例如gpio_request_one, Linux 版本 4.8 开始，
+        
+      </article>
+    </div>
+  </div>
+  </div>
+
+
+  
+  
+  <div class="post-wrapper">
+  <div class="post-wrap-right" data-aos="fade-up">
+    
+      <a class="post-link" href="/2024/11/28/linux-md/" aria-label="linux驱动学习相关笔记"></a>
+    
+    
+    <div class="post-cover-right">
+      
+        
+        
+          <img data-src="https://d-sketon.top/img/backimg/bg1.jpg" data-sizes="auto" alt="linux驱动学习相关笔记" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2024-11-28</span>
+        <span><span class="icon-pencil"></span>41 字</span>
+        <span><span class="icon-clock"></span>1 分钟</span>
+      </div>
+      <h2 class="post-title">linux驱动学习相关笔记</h2>
+      <article class="post-article">
+        
+          寄存器按位操作
+
+GPECON &amp;amp;&amp;#x3D; ~(3 &amp;lt;&amp;lt; 24); &amp;#x2F;&amp;#x2F;011 将24和25位清零GPECON |&amp;#x3D; (1 &amp;lt;&amp;lt; 24);  &amp;#x2F;&amp;#x2F;001 将24和25位分别赋值为1、0
+
+
+
+
+        
+      </article>
+    </div>
+  </div>
+  </div>
+
+
+  
+  
+  <div class="post-wrapper">
+  <div class="post-wrap-left" data-aos="fade-up">
+    
       <a class="post-link" href="/2024/11/27/rpi-kernel/" aria-label="基于树莓派4B本地驱动编译的环境搭建"></a>
     
     
@@ -347,7 +423,7 @@ Markdown常见语法换行 在一行的末尾添加两个或多个空格，然�
 <div class="sidebar-state">
   <div class="sidebar-state-article">
     <div>文章</div>
-    <div class="sidebar-state-number">4</div>
+    <div class="sidebar-state-number">6</div>
   </div>
   <div class="sidebar-state-category">
     <div>分类</div>
@@ -420,10 +496,10 @@ Markdown常见语法换行 在一行的末尾添加两个或多个空格，然�
     
       <div>
         <span class="icon-brush"></span>
-        3.3k
+        4.8k
         &nbsp;|&nbsp;
         <span class="icon-coffee"></span>
-        00:11
+        00:18
       </div>
     
     
@@ -457,7 +533,7 @@ Markdown常见语法换行 在一行的末尾添加两个或多个空格，然�
 <div class="sidebar-state">
   <div class="sidebar-state-article">
     <div>文章</div>
-    <div class="sidebar-state-number">4</div>
+    <div class="sidebar-state-number">6</div>
   </div>
   <div class="sidebar-state-category">
     <div>分类</div>
