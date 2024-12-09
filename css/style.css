@@ -1,12 +1,12 @@
 :root {
-  --red-0: #f00;
-  --red-1: #ff5252;
-  --red-2: #ff7c7c;
-  --red-3: #ffafaf;
-  --red-4: #ffd0d0;
-  --red-5: #ffe4e4;
-  --red-5-5: #ffecec;
-  --red-6: #fff3f3;
+  --red-0: #00f;
+  --red-1: #5252ff;
+  --red-2: #7c7cff;
+  --red-3: #afafff;
+  --red-4: #d0d0ff;
+  --red-5: #e4e4ff;
+  --red-5-5: #ececff;
+  --red-6: #f3f3ff;
   --grey-9: #999;
   --grey-7: #777;
   --color-archive-year: #000;
@@ -24,8 +24,8 @@
   --color-meta-shadow: var(--red-6);
   --color-hover-shadow: rgba(150,150,150,0.1);
   --color-h2-after: var(--red-1);
-  --color-red-6-shadow: rgba(255,78,78,0.6);
-  --color-red-3-shadow: rgba(255,78,78,0.3);
+  --color-red-6-shadow: rgba(78,78,255,0.6);
+  --color-red-3-shadow: rgba(78,78,255,0.3);
   --highlight-nav: #e6e6e6;
   --highlight-scrollbar: #d6d6d6;
   --highlight-background: #f7f7f7;
