@@ -195,24 +195,26 @@
       
         
         
-          <img data-src="/covers/04.jpg" data-sizes="auto" alt="树莓派4B-GPIO驱动" class="lazyload">
+          <img data-src="/covers/03.jpg" data-sizes="auto" alt="树莓派4B-GPIO驱动" class="lazyload">
         
       
     </div>
     <div class="post-info">
       <div class="post-meta">
         <span><span class="icon-calendar"></span>2024-12-08</span>
-        <span><span class="icon-pencil"></span>1.4k 字</span>
-        <span><span class="icon-clock"></span>6 分钟</span>
+        <span><span class="icon-pencil"></span>3k 字</span>
+        <span><span class="icon-clock"></span>13 分钟</span>
       </div>
       <h2 class="post-title">树莓派4B-GPIO驱动</h2>
       <article class="post-article">
         
-          使用寄存器对GPIO进行操作首先我们要了解对GPIO操作的相关寄存器，树莓派4B使用的芯片是bcm2711，通过树莓派官网下载芯片手册。通过查看芯片手册了解到有如下几个寄存器
+          使用寄存器对GPIO进行操作树莓派GPIO寄存器相关首先我们要了解对GPIO操作的相关寄存器，树莓派4B使用的芯片是bcm2711，通过树莓派官网下载芯片手册。通过查看芯片手册了解到有如下几个寄存器
 
-GPFSELx：
+GPFSELx：选择gpio的功能。例如FSEL9就是GPIO9，我们还可以看到通过设置某几位为000输入，001输出。
+GPSETx ：将gpio置1
+GPCLRx ：将GPIO清0
 
-使用Linux内核提供的GPIO相关APIGPIO相关API介绍旧的方法：sysfs 接口。在 Linux 版本 4.7 之前，在用户空间中管理 GPIO 行的接口始终通过导出在 &amp;#x2F;sys&amp;#x2F;class&amp;#x2F;gpio 中的文件在 sysfs 中。在写GPIO驱动的时候，大多数使用的是以gpio开头的函数，例如gpio_request_one, Linux 版本 4.8 开始，
+下面我们来使用这些寄存器，首先是GPFSELx:如果我们要将GPIO3设置成输出，根据手册上的描述只需要将寄存器GPSEL0的【11:9】位设置为 001 即可。通过查看开始寄存器偏移地址可知GPFSEL0的地
         
       </article>
     </div>
@@ -265,7 +267,7 @@ GPECON &amp;amp;&amp;#x3D; ~(3 &amp;lt;&amp;lt; 24); &amp;#x2F;&amp;#x2F;011 将
       
         
         
-          <img data-src="https://d-sketon.top/img/backimg/bg1.jpg" data-sizes="auto" alt="基于树莓派4B本地驱动编译的环境搭建" class="lazyload">
+          <img data-src="/covers/06.jpg" data-sizes="auto" alt="基于树莓派4B本地驱动编译的环境搭建" class="lazyload">
         
       
     </div>
@@ -300,7 +302,7 @@ GPECON &amp;amp;&amp;#x3D; ~(3 &amp;lt;&amp;lt; 24); &amp;#x2F;&amp;#x2F;011 将
       
         
         
-          <img data-src="/covers/06.jpg" data-sizes="auto" alt="使用FileZila与Linux传输文件" class="lazyload">
+          <img data-src="/covers/04.jpg" data-sizes="auto" alt="使用FileZila与Linux传输文件" class="lazyload">
         
       
     </div>
@@ -336,7 +338,7 @@ sudo apt-get install vsftpd
       
         
         
-          <img data-src="/covers/02.jpg" data-sizes="auto" alt="creat_blog" class="lazyload">
+          <img data-src="/covers/06.jpg" data-sizes="auto" alt="creat_blog" class="lazyload">
         
       
     </div>
@@ -371,7 +373,7 @@ sudo apt-get install vsftpd
       
         
         
-          <img data-src="/covers/02.jpg" data-sizes="auto" alt="My-First-Markdown" class="lazyload">
+          <img data-src="/covers/04.jpg" data-sizes="auto" alt="My-First-Markdown" class="lazyload">
         
       
     </div>
@@ -499,10 +501,10 @@ Markdown常见语法换行 在一行的末尾添加两个或多个空格，然�
     
       <div>
         <span class="icon-brush"></span>
-        4.8k
+        6.3k
         &nbsp;|&nbsp;
         <span class="icon-coffee"></span>
-        00:18
+        00:25
       </div>
     
     
