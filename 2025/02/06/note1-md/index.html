@@ -1,0 +1,689 @@
+
+  <!DOCTYPE html>
+  <html lang="zh-CN"  >
+  <head>
+  <meta charset="utf-8">
+  
+
+  
+
+  
+
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.code_block = {"expand":true};</script>
+  
+  <title>
+    C语言零散知识点 |
+    
+    TLX的主页
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic&display=swap" media="print" onload="this.media&#x3D;&#39;all&#39;">
+  
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_tq6stt6tcg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  
+  
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+  
+  
+    <meta name="description" content="一些关键字 volatile关键字 使用volatile关键字声明变量，目的是为了告诉编译器不要对其进行‘优化’。那什么是‘优化’呢？，举个例子如下：    12345int a &#x3D; 1,b,c; &#x2F;&#x2F;为a b c申请内存并初始化b &#x3D; a;          &#x2F;&#x2F;内存（&amp;a） -&gt; CPU                &#x2F;&#x2F;CPU -&gt; 内存（&amp;b）c &#x3D; a;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C语言零散知识点">
+<meta property="og:url" content="http://tlxchen.github.io/2025/02/06/note1-md/index.html">
+<meta property="og:site_name" content="TLX的主页">
+<meta property="og:description" content="一些关键字 volatile关键字 使用volatile关键字声明变量，目的是为了告诉编译器不要对其进行‘优化’。那什么是‘优化’呢？，举个例子如下：    12345int a &#x3D; 1,b,c; &#x2F;&#x2F;为a b c申请内存并初始化b &#x3D; a;          &#x2F;&#x2F;内存（&amp;a） -&gt; CPU                &#x2F;&#x2F;CPU -&gt; 内存（&amp;b）c &#x3D; a;">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-02-06T08:42:28.000Z">
+<meta property="article:modified_time" content="2025-02-07T08:43:09.751Z">
+<meta property="article:author" content="挺凉歙">
+<meta name="twitter:card" content="summary">
+  
+  
+    <link rel="alternate" href="/atom.xml" title="TLX的主页" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+  
+  
+  
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+  
+  
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.0/dist/aos.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    
+  <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi">
+        
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+        
+      </div>
+      <div class="loading-word">少女祈祷中...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script>
+
+<div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav">
+    
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/">首页</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/archives">归档</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/about">关于</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/friend">友链</a>
+        </span>
+      
+    
+    <a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav">
+    
+      <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅" target="_blank"></a>
+    
+    
+    
+  </nav>
+</div>
+<header id="header">
+  
+    
+      <img fetchpriority="high" src="/images/banner.webp" alt="C语言零散知识点">
+    
+  
+  <div id="header-outer">
+    <div id="header-title">
+      
+        
+        
+          <a href="/" id="logo">
+            <h1 data-aos="slide-up">C语言零散知识点</h1>
+          </a>
+        
+      
+      
+        
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+          
+        </h2>
+      
+    </div>
+  </div>
+</header>
+
+        <div id="content">
+          
+          <section id="main"><article id="post-note1-md" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <a href="/2025/02/06/note1-md/" class="article-date-link" data-aos="zoom-in">
+    <time datetime="2025-02-06T08:42:28.000Z" itemprop="datePublished">2025-02-06</time>
+    <time style="display: none;" id="post-update-time">2025-02-07</time>
+  </a>
+</div>
+
+      
+
+    </div>
+    <div class="hr-line"></div>
+    
+
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+      
+        <h2 id="一些关键字"><a href="#一些关键字" class="headerlink" title="一些关键字"></a>一些关键字</h2><ol>
+<li><p>volatile关键字<br> 使用volatile关键字声明变量，目的是为了告诉编译器不要对其进行‘优化’。那什么是‘优化’呢？，举个例子如下：  </p>
+ <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> a = <span class="number">1</span>,b,c; <span class="comment">//为a b c申请内存并初始化</span></span><br><span class="line">b = a;          <span class="comment">//内存（&amp;a） -&gt; CPU</span></span><br><span class="line">                <span class="comment">//CPU -&gt; 内存（&amp;b）</span></span><br><span class="line">c = a;          <span class="comment">//内存（&amp;a） -&gt; CPU</span></span><br><span class="line">                <span class="comment">//CPU -&gt; 内存（&amp;c）</span></span><br></pre></td></tr></table></figure>
+<p> 以上代码可以帮助我们更好理解寄存器（CPU）读取规则：在初始化完成，寄存器会从a的内存中读取值，然后再将这存到b的内存中；同理，接下来寄存器会从a的内存中读取值，然后再将这存到c的内存中。其中<code>内存（&amp;a） -&gt; CPU</code> 这一步进行了俩次，但是第二次明显多多余了，于是编译器便对其进行了‘优化’：直接将上一次寄存器（CPU）中存储的a的值存入C的内存中，这样便减少了一次指令的执行。<br> 但是在这个过程中，如果a的值在其他地方发生变化，那么寄存器（CPU）中存储的值就不能直接存入c的内存，这个时候就需要使用volatile声明变量a，告诉编译器，这个变量会经常改变，必须从它的内存中取读取数据。<br> 在以下三种情况应该使用volatile关键字：  </p>
+<ul>
+<li>并行设备的硬件寄存器。它们的寄存器状态随时会因为自身硬件而改变，因此，对存储器映射的硬件寄存器应该使用vlatile关键字。</li>
+<li>中断服务程序（ISR）与主程序的共享变量</li>
+<li>多线程中的共享变量</li>
+</ul>
+</li>
+<li><p>static 关键字<br> static是被声明的静态类型的变量，存储在静态区（全局区）中，它的生命周期是整个程序的生命周期。static声明的变量如果没有初始化，那么默认初始化为0。static声明的全局变量，作用域为当前文件，声明的局部变量则是当前<code>&#123;&#125;</code> 。<br> static 声明的变量初始化后，都会保存在内存区域中，由于它的生命周期相当于整个程序的生命周期，因此它不会被销毁。</p>
+</li>
+<li><p>const 关键字<br>定义变量为常量（即不可被改变）。<br>当const声明指针时，有以下几种情况：  </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">   <span class="type">const</span> <span class="type">int</span> *p;</span><br><span class="line">   <span class="type">int</span> <span class="type">const</span> *p;</span><br><span class="line">   <span class="type">int</span>* <span class="type">const</span> p;</span><br><span class="line">   <span class="type">const</span> <span class="type">int</span>* <span class="type">const</span> p;</span><br><span class="line">   ```  </span><br><span class="line">   第<span class="number">1</span>、<span class="number">2</span>种情况完全相同，但是常量指针：p都是指向一个不可变的常量，但是p本身的值可以改变；  </span><br><span class="line">   第<span class="number">3</span>种是指针常量：可以通过p更改p指向的值，但不能更改p的值；  </span><br><span class="line">   第<span class="number">4</span>种指向常量的常指针：即指针是常量，指针所指向的值也是常量，即不能更改指针的值，也不能通过该指针更改其指向的值。  </span><br><span class="line"></span><br><span class="line">   <span class="type">const</span>如果声明函数传参时，即函数内不能改变该参数的值；  </span><br><span class="line">   <span class="type">const</span>如果声明函数返回值时：分两种情况，如果返回值是指针，那么指针指向的内容是不可改变的，并且获取该函数的返回值时必须也用同样有<span class="type">const</span>修饰的对应类型的变量；如果返回值是其他，那么由于函数执行的<span class="keyword">return</span>时，它的生命周期结束了，用<span class="type">const</span>修饰的变量也被销毁了，即使用<span class="type">const</span>毫无意义。</span><br><span class="line"><span class="number">4.</span> <span class="keyword">typedef</span> 和 define </span><br><span class="line">   define 是c语言中定义的语法，是预处理指令。它的作用是在预处理的时候，进行简单的机械字符串替换，无论正确与否，即不做正确性检查，只有当编译已被展开的源码时才会发现错误。而<span class="keyword">typedef</span>是关键字，在编译时处理，因此它具有类型检查的功能。它的作用是，在自己的作用域内，为已经存在的类型增加一个别名，以便与理解，但他不能再函数内使用。</span><br><span class="line"></span><br><span class="line">   define没有作用域的限制，只有之前预定义过的宏，在之后的程序中都可以使用，而<span class="keyword">typedef</span>有作用域的限制</span><br><span class="line">   对指针操作也不同，例如在以下代码中：</span><br><span class="line">   ```c</span><br><span class="line">   <span class="meta">#<span class="keyword">define</span> INTP1 int*</span></span><br><span class="line">   <span class="keyword">typedef</span> INTP2 <span class="type">int</span>*</span><br><span class="line">   INTP1 p1,p2;</span><br><span class="line">   INTP2 p3,p4;</span><br></pre></td></tr></table></figure>
+<p><code>INTP1 p1,p2;</code>经过字符串替换后为 <code>int* p1,p2</code>,即声明一个int指针和int类型的变量，而<code>INTP2 p3,p4;</code> 由于 INTP2是由含义的：指向整型的指针。因此后面的p3,p4都是指向整型的指针（如果不能理解你可以把 int* 想成 char，那p3,p4就都是char类型）。</p>
+</li>
+</ol>
+<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><ol>
+<li>定义常量谁更好？# define还是 const？</li>
+<li>全局变量和局部变量的区别是什么?</li>
+<li>全局变量可不可以定义在可被多个.C文件包含的头文件中？为什么？</li>
+<li>局部变量能否和全局变量重名？</li>
+</ol>
+<h2 id="指针"><a href="#指针" class="headerlink" title="指针"></a>指针</h2><h3 id="数组与指针"><a href="#数组与指针" class="headerlink" title="数组与指针"></a>数组与指针</h3><ol>
+<li>数组指针，是一个指向数组的指针，例如 <code>int (*p)[4];</code> 声明了一个指针，该指针指向一个有4个int类型元素的数组。（我看的能个链接好像有问题，没怎么看懂，后面补一个新的例题）</li>
+<li>指针数组，是一个数组，其内容都是由指针构成。如<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> *p[<span class="number">3</span>];</span><br><span class="line"><span class="type">int</span> a[<span class="number">3</span>];</span><br><span class="line">p[<span class="number">0</span>] = &amp;a[<span class="number">0</span>]; </span><br><span class="line">p[<span class="number">1</span>] = &amp;a[<span class="number">1</span>]; </span><br><span class="line">p[<span class="number">2</span>] = &amp;a[<span class="number">2</span>]; </span><br></pre></td></tr></table></figure>
+这样是合理的数组p里面存储的都是int类型的指针。</li>
+<li>数组所占存储空间的大小：sizeof(数组名)<br>数组大小：sizeof(数组名)&#x2F;sizeof(数据类型)<br>sizeof(指针名)，无论该指针是什么类型，在32位系统下结果位4，64位系统下结果为8。  </li>
+<li><strong>指针进行强制类型转换后与地址进行加法运算，结果是什么？</strong></li>
+</ol>
+<h3 id="函数与指针"><a href="#函数与指针" class="headerlink" title="函数与指针"></a>函数与指针</h3><p>函数指针。在程序中声明了一个函数后，系统会为这个函数分配空间，这段存储空间的首地址便是这个函数的地址，同时，函数名表示的就是这个地址。因此，可以用一个指针来存储该地址，这样的指针变量就叫做函数指针，其形式类似于<code>int (*p)(int,int);</code><br>因为它是一个指针变量，所以是*p，后面两个int说明该指针指向的函数需要两个int类型的参数。指向函数的指针没有++或者–等操作。<br><strong>另外由于<code>*</code>的优先级比括号低</strong>，如果不加括号<code>int *p(int,int);</code> ，这样则是一个返回类型为int*,传入参数为两个int的函数声明。<br>函数指针的使用案例：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">max</span><span class="params">(<span class="type">int</span>,<span class="type">int</span>)</span>;   <span class="comment">//函数声明</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> (*p)(<span class="type">int</span>,<span class="type">int</span>) = max;</span><br><span class="line">    <span class="type">int</span> a=<span class="number">1</span>,b=<span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;a b max is %d\n&quot;</span>,(*p)(a,b));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">max</span><span class="params">(<span class="type">int</span> a,<span class="type">int</span> b)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> a&gt;b?a:b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h2><h3 id="C语言函数参数压栈顺序是怎样的？"><a href="#C语言函数参数压栈顺序是怎样的？" class="headerlink" title="C语言函数参数压栈顺序是怎样的？"></a>C语言函数参数压栈顺序是怎样的？</h3><p>从右向左，主要原因是为了方便支持可变长参数。例如<code>printf（const char* format,…）</code>,采用从右向左压栈后，固定参数 format会位于栈顶附件，可以用指针直接访问，然后通过指针偏移访问其他参数。示例：可变长参数函数</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdarg.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">print_numbers</span><span class="params">(<span class="type">int</span> count, ...)</span> &#123;</span><br><span class="line">    va_list ap;</span><br><span class="line">    va_start(ap, count); <span class="comment">// ap指向count之后的第一个可变参数</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; count; i++) &#123;</span><br><span class="line">        <span class="type">int</span> num = va_arg(ap, <span class="type">int</span>); <span class="comment">// 依次访问可变参数</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>, num);</span><br><span class="line">    &#125;</span><br><span class="line">    va_end(ap);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    print_numbers(<span class="number">3</span>, <span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>); <span class="comment">// 输出：10 20 30</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="预处理"><a href="#预处理" class="headerlink" title="预处理"></a>预处理</h2><ol>
+<li>#error。当编译程序时，当遇到一个#error时，就会生成一个编译错误的提示信息。例如 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifdef</span> xxx</span></span><br><span class="line">    <span class="meta">#<span class="keyword">error</span> have <span class="keyword">define</span> xxx</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure></li>
+<li>使用 <code>#intclude&lt;filename.h&gt;</code>与<code>#intclude&quot;filename.h&quot;</code>的区别？<br>区别是当使用第一个是，系统编译器会先从标准库的路径搜索<code>filename.h</code>，使得系统文件调用较快。而第二个则先从用户的工作路径去查找文件，使得自定义文件较快。</li>
+<li>在头文件中定义静态变量是否可行，为什么?<br>   不可行，在头文件中定义静态变量，会造成资源浪费的问题。因为按照编译的步骤，如果头文件中存在一个静态变量，那么每一个使用该头文件的文件都会创建一个新的静态变量，从而引起空间浪费或者程序错误。  </li>
+<li># 和## 的使用<br>#可以把宏参数转换成其对于的字符串，例如：<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> CONVERT(a) #a</span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line"> <span class="type">int</span> num = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"> <span class="built_in">printf</span>(CONVERT(num));   <span class="comment">//其输出结果为num</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+##则是连接操作符，把多个形参转换成一个实际的参数名，例如：<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> CONNECT(a,b) a##b</span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line"> <span class="type">int</span> lastnum = <span class="number">5</span>;</span><br><span class="line"></span><br><span class="line"> <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>,CONNECT(last,num));   <span class="comment">//其输出结果为5</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><ol>
+<li>strlen(“\0”) &#x3D;？ sizeof(“\0”)&#x3D;? 两者结果与区别<br>strlen(“\0”) &#x3D;0 sizeof(“\0”)&#x3D;2。strlen是从字符串开始计数直到’\0’结束；而sizof则是计算括号内所占的空间大小。</li>
+<li>C语言中 struct与 union的区别是什么?<br>结构体是所有成员所占空间是它们之和，所有成员都是存在的；而联合体是所有成员共用同一块空间，联合体内只存放了其中一个成员，其变量长度为最长的成员长度。（两者的长度都要考虑字节对齐）。</li>
+<li>什么是大端和小端？<br>大端：高地址存低字节，低地址存高字节。<br>小端：低地址存低字节，高地址存高字节</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      
+      
+      
+      
+      
+      
+      
+
+    </footer>
+  </div>
+  
+  <nav id="article-nav" data-aos="fade-up">
+    
+      <div class="article-nav-link-wrap article-nav-link-left">
+        
+          
+          
+            <img data-src="/covers/06.jpg" data-sizes="auto" alt="note2.md" class="lazyload">
+          
+        
+        <a href="/2025/02/11/note2-md/"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">
+          
+            note2.md
+          
+        </h3>
+      </div>
+    
+    
+    <div class="article-nav-link-wrap article-nav-link-right">
+      
+        
+        
+          <img data-src="/covers/02.jpg" data-sizes="auto" alt="树莓派4B-GPIO驱动" class="lazyload">
+        
+      
+      <a href="/2024/12/08/gpio-md/"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+        
+          树莓派4B-GPIO驱动
+        
+      </h3>
+    </div>
+    
+  </nav>
+
+
+</article>
+
+
+
+
+
+
+</section>
+          
+            <aside id="sidebar">
+  <div class="sidebar-wrapper wrap-sticky">
+    <div class="sidebar-wrap" data-aos="fade-up">
+      
+        <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-number">1.</span> <span class="toc-text">一些关键字</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%98%E9%87%8F"><span class="toc-number">2.</span> <span class="toc-text">变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%87%E9%92%88"><span class="toc-number">3.</span> <span class="toc-text">指针</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E4%B8%8E%E6%8C%87%E9%92%88"><span class="toc-number">3.1.</span> <span class="toc-text">数组与指针</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E4%B8%8E%E6%8C%87%E9%92%88"><span class="toc-number">3.2.</span> <span class="toc-text">函数与指针</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E5%AD%98"><span class="toc-number">4.</span> <span class="toc-text">内存</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#C%E8%AF%AD%E8%A8%80%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E5%8E%8B%E6%A0%88%E9%A1%BA%E5%BA%8F%E6%98%AF%E6%80%8E%E6%A0%B7%E7%9A%84%EF%BC%9F"><span class="toc-number">4.1.</span> <span class="toc-text">C语言函数参数压栈顺序是怎样的？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%84%E5%A4%84%E7%90%86"><span class="toc-number">5.</span> <span class="toc-text">预处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-number">6.</span> <span class="toc-text">其他</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="挺凉歙" class="lazyload">
+  <div class="sidebar-author-name">挺凉歙</div>
+  <div class="sidebar-description"></div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">8</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">0</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">0</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+      
+      
+        <div class="sidebar-btn-wrapper" style="position:static">
+          <div class="sidebar-toc-btn current"></div>
+          <div class="sidebar-common-btn"></div>
+        </div>
+      
+    </div>
+  </div>
+
+  
+</aside>
+
+          
+        </div>
+        <footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    
+    <div>
+      <span class="icon-copyright"></span>
+      2020-2025
+      <span class="footer-info-sep rotate"></span>
+      挺凉歙
+    </div>
+    
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener external nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+    
+    
+      <div>
+        <span class="icon-brush"></span>
+        8.7k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        00:35
+      </div>
+    
+    
+    
+    
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+    
+  </div>
+</footer>
+
+        
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav">
+  <div class="sidebar-wrap">
+    
+      <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-number">1.</span> <span class="toc-text">一些关键字</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%98%E9%87%8F"><span class="toc-number">2.</span> <span class="toc-text">变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%87%E9%92%88"><span class="toc-number">3.</span> <span class="toc-text">指针</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E4%B8%8E%E6%8C%87%E9%92%88"><span class="toc-number">3.1.</span> <span class="toc-text">数组与指针</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E4%B8%8E%E6%8C%87%E9%92%88"><span class="toc-number">3.2.</span> <span class="toc-text">函数与指针</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E5%AD%98"><span class="toc-number">4.</span> <span class="toc-text">内存</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#C%E8%AF%AD%E8%A8%80%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E5%8E%8B%E6%A0%88%E9%A1%BA%E5%BA%8F%E6%98%AF%E6%80%8E%E6%A0%B7%E7%9A%84%EF%BC%9F"><span class="toc-number">4.1.</span> <span class="toc-text">C语言函数参数压栈顺序是怎样的？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%84%E5%A4%84%E7%90%86"><span class="toc-number">5.</span> <span class="toc-text">预处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-number">6.</span> <span class="toc-text">其他</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+      <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="挺凉歙" class="lazyload">
+  <div class="sidebar-author-name">挺凉歙</div>
+  <div class="sidebar-description"></div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">8</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">0</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">0</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+    
+  </div>
+  
+    <div class="sidebar-btn-wrapper">
+      <div class="sidebar-toc-btn current"></div>
+      <div class="sidebar-common-btn"></div>
+    </div>
+  
+</nav>
+
+    </div>
+    
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+
+
+
+
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.0.6/dist/index.umd.js" integrity="sha384-vkGvf25gm1C1PbcoD5dNfc137HzNL&#x2F;hr1RKA5HniJOaawtvUmH5lTVFgFAruE9Ge" crossorigin="anonymous"></script>
+
+  <script>
+    window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["#ff5252","#ff7c7c","#ffafaf","#ffd0d0"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["#ff0000"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'))
+  </script>
+
+
+
+
+
+  <script>
+    function initLive2d() {
+      live2d.init("https://fastly.jsdelivr.net/gh/D-Sketon/plugin-live2d/", {themeTipsPath: ""});
+    }
+  </script>
+  
+<script src="https://fastly.jsdelivr.net/gh/D-Sketon/plugin-live2d/js/live2d-autoload.js" onload="initLive2d &amp;&amp; initLive2d()" async></script>
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+    
+    
+      
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+    
+    
+      <script type="module" data-pjax>
+        const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+        
+        const pswp = () => {
+          if (_$$('.article-entry a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-entry',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          if(_$$('.article-gallery a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-gallery',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          window.lightboxStatus = 'done';
+          window.removeEventListener('lightbox:ready', pswp);
+        }
+        if(window.lightboxStatus === 'ready') {
+          pswp()
+        } else {
+          window.addEventListener('lightbox:ready', pswp);
+        }
+      </script>
+      
+
+
+
+
+
+
+
+
+    
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.1.0' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+
+  </body>
+  </html>
+
