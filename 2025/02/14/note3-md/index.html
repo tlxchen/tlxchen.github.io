@@ -12,7 +12,7 @@
   <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.code_block = {"expand":true};</script>
   
   <title>
-    使用FileZila与Linux传输文件 |
+    note3.md |
     
     TLX的主页
   </title>
@@ -27,21 +27,15 @@
 
   
   
-    <meta name="description" content="使用FTP快速与Linux传输文件前言一般使用Linux都是直接在电脑上开一个虚拟机，在很多时候都需要把本地的文件传到虚拟机里面去，我用的虚拟机软件是Vmware,每次我想传文件都叫我先安装什么Vmware-tool，一直没安装上。后来在网上看到使用FTP传输文件，这次趁着刚建了一个白板Linux，写一篇给自己用的教程。没办法自己太笨了，过段时间又忘了。 前期准备 电脑安装软件 FileZila，">
-<meta property="og:type" content="article">
-<meta property="og:title" content="使用FileZila与Linux传输文件">
-<meta property="og:url" content="http://tlxchen.github.io/2024/11/23/FTP-file/index.html">
+    <meta property="og:type" content="article">
+<meta property="og:title" content="note3.md">
+<meta property="og:url" content="http://tlxchen.github.io/2025/02/14/note3-md/index.html">
 <meta property="og:site_name" content="TLX的主页">
-<meta property="og:description" content="使用FTP快速与Linux传输文件前言一般使用Linux都是直接在电脑上开一个虚拟机，在很多时候都需要把本地的文件传到虚拟机里面去，我用的虚拟机软件是Vmware,每次我想传文件都叫我先安装什么Vmware-tool，一直没安装上。后来在网上看到使用FTP传输文件，这次趁着刚建了一个白板Linux，写一篇给自己用的教程。没办法自己太笨了，过段时间又忘了。 前期准备 电脑安装软件 FileZila，">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://tlxchen.github.io/2024/11/23/FTP-file/01.png">
-<meta property="og:image" content="http://tlxchen.github.io/2024/11/23/FTP-file/02.png">
-<meta property="og:image" content="http://tlxchen.github.io/2024/11/23/FTP-file/03.png">
-<meta property="article:published_time" content="2024-11-23T10:45:57.000Z">
-<meta property="article:modified_time" content="2024-11-23T12:06:13.764Z">
+<meta property="article:published_time" content="2025-02-14T11:59:31.000Z">
+<meta property="article:modified_time" content="2025-02-14T11:59:31.675Z">
 <meta property="article:author" content="挺凉歙">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://tlxchen.github.io/2024/11/23/FTP-file/01.png">
   
   
     <link rel="alternate" href="/atom.xml" title="TLX的主页" type="application/atom+xml">
@@ -164,7 +158,7 @@
 <header id="header">
   
     
-      <img fetchpriority="high" src="/images/banner.webp" alt="使用FileZila与Linux传输文件">
+      <img fetchpriority="high" src="/images/banner.webp" alt="note3.md">
     
   
   <div id="header-outer">
@@ -173,7 +167,7 @@
         
         
           <a href="/" id="logo">
-            <h1 data-aos="slide-up">使用FileZila与Linux传输文件</h1>
+            <h1 data-aos="slide-up">note3.md</h1>
           </a>
         
       
@@ -189,13 +183,13 @@
 
         <div id="content">
           
-          <section id="main"><article id="post-FTP-file" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+          <section id="main"><article id="post-note3-md" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-inner" data-aos="fade-up">
     <div class="article-meta">
       <div class="article-date">
-  <a href="/2024/11/23/FTP-file/" class="article-date-link" data-aos="zoom-in">
-    <time datetime="2024-11-23T10:45:57.000Z" itemprop="datePublished">2024-11-23</time>
-    <time style="display: none;" id="post-update-time">2024-11-23</time>
+  <a href="/2025/02/14/note3-md/" class="article-date-link" data-aos="zoom-in">
+    <time datetime="2025-02-14T11:59:31.000Z" itemprop="datePublished">2025-02-14</time>
+    <time style="display: none;" id="post-update-time">2025-02-14</time>
   </a>
 </div>
 
@@ -208,26 +202,7 @@
     <div class="e-content article-entry" itemprop="articleBody">
       
       
-        <h1 id="使用FTP快速与Linux传输文件"><a href="#使用FTP快速与Linux传输文件" class="headerlink" title="使用FTP快速与Linux传输文件"></a><em>使用FTP快速与Linux传输文件</em></h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一般使用Linux都是直接在电脑上开一个虚拟机，在很多时候都需要把本地的文件传到虚拟机里面去，我用的虚拟机软件是Vmware,每次我想传文件都叫我先安装什么Vmware-tool，一直没安装上。<br>后来在网上看到使用FTP传输文件，这次趁着刚建了一个白板Linux，写一篇给自己用的教程。<del>没办法自己太笨了，过段时间又忘了。</del></p>
-<h2 id="前期准备"><a href="#前期准备" class="headerlink" title="前期准备"></a>前期准备</h2><ol>
-<li>电脑安装软件 FileZila，找个 <strong><a href="www.baidu.com">官网</a></strong> 下载即可。   </li>
-<li>虚拟机上要求要联网，而且要安装FTP服务。在Linux终端窗口输入以下命令安装FTP服务。<blockquote>
-<p>sudo apt-get install vsftpd  </p>
-</blockquote>
- 更改相关配置文件。<blockquote>
-<p>sudo vi &#x2F;etc&#x2F;vsftpd.conf</p>
-</blockquote>
- 在该文件找到这两行,确保它们没有被注释。<blockquote>
-<p>local_enable&#x3D;YES<br> write_enable&#x3D;YES</p>
-</blockquote>
- 修改完后保存文件，重启FTP服务。<blockquote>
-<p>sudo &#x2F;etc&#x2F;init.d&#x2F;vsftpd restart</p>
-</blockquote>
-</li>
-</ol>
-<h2 id="FileZila-操作"><a href="#FileZila-操作" class="headerlink" title="FileZila 操作"></a>FileZila 操作</h2><p>打开软件大概是如下界面，点击左上角，新建站点。 <img src="01.png"><br>然后按如下图填写：<img src="02.png"><br>点击连接，结果如下就算连接成功。<br><img src="03.png"></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45309916/article/details/107782070">参考连接</a></p>
-
+        
       
     </div>
     <footer class="article-footer">
@@ -245,35 +220,19 @@
   
   <nav id="article-nav" data-aos="fade-up">
     
-      <div class="article-nav-link-wrap article-nav-link-left">
-        
-          
-          
-            <img data-src="/covers/03.jpg" data-sizes="auto" alt="基于树莓派4B本地驱动编译的环境搭建" class="lazyload">
-          
-        
-        <a href="/2024/11/27/rpi-kernel/"></a>
-        <div class="article-nav-caption">前一篇</div>
-        <h3 class="article-nav-title">
-          
-            基于树莓派4B本地驱动编译的环境搭建
-          
-        </h3>
-      </div>
-    
     
     <div class="article-nav-link-wrap article-nav-link-right">
       
         
         
-          <img data-src="/covers/06.jpg" data-sizes="auto" alt="creat_blog" class="lazyload">
+          <img data-src="/covers/02.jpg" data-sizes="auto" alt="常见通信协议" class="lazyload">
         
       
-      <a href="/2024/11/12/creat-blog/"></a>
+      <a href="/2025/02/11/note2-md/"></a>
       <div class="article-nav-caption">后一篇</div>
       <h3 class="article-nav-title">
         
-          creat_blog
+          常见通信协议
         
       </h3>
     </div>
@@ -298,7 +257,7 @@
   <h3 class="toc-title">文章目录</h3>
   <div class="sidebar-toc-wrapper toc-div-class" >
       
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8FTP%E5%BF%AB%E9%80%9F%E4%B8%8ELinux%E4%BC%A0%E8%BE%93%E6%96%87%E4%BB%B6"><span class="toc-number">1.</span> <span class="toc-text">使用FTP快速与Linux传输文件</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E6%9C%9F%E5%87%86%E5%A4%87"><span class="toc-number">1.2.</span> <span class="toc-text">前期准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FileZila-%E6%93%8D%E4%BD%9C"><span class="toc-number">1.3.</span> <span class="toc-text">FileZila 操作</span></a></li></ol></li></ol>
+        
       
   </div>
 </div>
@@ -434,7 +393,7 @@
   <h3 class="toc-title">文章目录</h3>
   <div class="sidebar-toc-wrapper toc-div-class" >
       
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8FTP%E5%BF%AB%E9%80%9F%E4%B8%8ELinux%E4%BC%A0%E8%BE%93%E6%96%87%E4%BB%B6"><span class="toc-number">1.</span> <span class="toc-text">使用FTP快速与Linux传输文件</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E6%9C%9F%E5%87%86%E5%A4%87"><span class="toc-number">1.2.</span> <span class="toc-text">前期准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FileZila-%E6%93%8D%E4%BD%9C"><span class="toc-number">1.3.</span> <span class="toc-text">FileZila 操作</span></a></li></ol></li></ol>
+        
       
   </div>
 </div>
