@@ -188,14 +188,49 @@
     <div class="post-wrapper">
   <div class="post-wrap-left" data-aos="fade-up">
     
-      <a class="post-link" href="/2025/02/14/note3-md/" aria-label="FreeRtos学习"></a>
+      <a class="post-link" href="/2025/03/01/2024%E5%85%A8%E5%9B%BD%E7%94%B5%E8%B5%9BE%E9%A2%98%E8%A7%86%E8%A7%89%E9%83%A8%E5%88%86/" aria-label="2024全国电赛E题视觉部分"></a>
     
     
     <div class="post-cover-left">
       
         
         
-          <img data-src="/covers/02.jpg" data-sizes="auto" alt="FreeRtos学习" class="lazyload">
+          <img data-src="/covers/04.jpg" data-sizes="auto" alt="2024全国电赛E题视觉部分" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2025-03-01</span>
+        <span><span class="icon-pencil"></span>1.8k 字</span>
+        <span><span class="icon-clock"></span>7 分钟</span>
+      </div>
+      <h2 class="post-title">2024全国电赛E题视觉部分</h2>
+      <article class="post-article">
+        
+          写在前面此文档用于记录、以及介绍自己当时写的代码以及思路，另外让自己在重温一遍代码，感受一下自己当时有多蠢。此文档并没有改进打算，思路仅供参考。
+项目简介使用STM32F103C8T6+openmv+串口屏。其中  
+
+STM32F103C8T6。负责接收openmv的下棋指令，控制机械臂下棋，以及转发(至openmv)人下棋的位置，像串口屏发送棋盘状态。
+openmv。识别棋盘和棋子的状态；选择最优下棋方案，并向stm32发送下棋指令；识别人故意挪动棋子，并发送复位指令。
+串口屏。显示棋盘状态；提供下棋按钮，向stm32发送下棋位置；显示机械臂单次操作所耗时间。因为我这里只有串口屏和open
+        
+      </article>
+    </div>
+  </div>
+</div>
+  
+    <div class="post-wrapper">
+  <div class="post-wrap-right" data-aos="fade-up">
+    
+      <a class="post-link" href="/2025/02/14/note3-md/" aria-label="FreeRtos学习"></a>
+    
+    
+    <div class="post-cover-right">
+      
+        
+        
+          <img data-src="/covers/03.jpg" data-sizes="auto" alt="FreeRtos学习" class="lazyload">
         
       
     </div>
@@ -220,12 +255,12 @@ FreeRtos相关API参考资料FreeRTOS 快速入门
 </div>
   
     <div class="post-wrapper">
-  <div class="post-wrap-right" data-aos="fade-up">
+  <div class="post-wrap-left" data-aos="fade-up">
     
       <a class="post-link" href="/2025/02/11/note2-md/" aria-label="常见通信协议"></a>
     
     
-    <div class="post-cover-right">
+    <div class="post-cover-left">
       
         
         
@@ -250,12 +285,12 @@ FreeRtos相关API参考资料FreeRTOS 快速入门
 </div>
   
     <div class="post-wrapper">
-  <div class="post-wrap-left" data-aos="fade-up">
+  <div class="post-wrap-right" data-aos="fade-up">
     
       <a class="post-link" href="/2025/02/06/note1-md/" aria-label="C语言零散知识点"></a>
     
     
-    <div class="post-cover-left">
+    <div class="post-cover-right">
       
         
         
@@ -283,16 +318,16 @@ volatile关键字 使用volatile关键字声明变量，目的是为了告诉编
 </div>
   
     <div class="post-wrapper">
-  <div class="post-wrap-right" data-aos="fade-up">
+  <div class="post-wrap-left" data-aos="fade-up">
     
       <a class="post-link" href="/2024/12/08/gpio-md/" aria-label="树莓派4B-GPIO驱动"></a>
     
     
-    <div class="post-cover-right">
+    <div class="post-cover-left">
       
         
         
-          <img data-src="/covers/03.jpg" data-sizes="auto" alt="树莓派4B-GPIO驱动" class="lazyload">
+          <img data-src="/covers/04.jpg" data-sizes="auto" alt="树莓派4B-GPIO驱动" class="lazyload">
         
       
     </div>
@@ -319,16 +354,16 @@ GPCLRx ：将GPIO清0
 </div>
   
     <div class="post-wrapper">
-  <div class="post-wrap-left" data-aos="fade-up">
+  <div class="post-wrap-right" data-aos="fade-up">
     
       <a class="post-link" href="/2024/11/28/linux-md/" aria-label="linux驱动学习相关笔记"></a>
     
     
-    <div class="post-cover-left">
+    <div class="post-cover-right">
       
         
         
-          <img data-src="/covers/03.jpg" data-sizes="auto" alt="linux驱动学习相关笔记" class="lazyload">
+          <img data-src="/covers/02.jpg" data-sizes="auto" alt="linux驱动学习相关笔记" class="lazyload">
         
       
     </div>
@@ -355,16 +390,16 @@ GPECON &amp;amp;&amp;#x3D; ~(3 &amp;lt;&amp;lt; 24); &amp;#x2F;&amp;#x2F;011 将
 </div>
   
     <div class="post-wrapper">
-  <div class="post-wrap-right" data-aos="fade-up">
+  <div class="post-wrap-left" data-aos="fade-up">
     
       <a class="post-link" href="/2024/11/27/rpi-kernel/" aria-label="基于树莓派4B本地驱动编译的环境搭建"></a>
     
     
-    <div class="post-cover-right">
+    <div class="post-cover-left">
       
         
         
-          <img data-src="/covers/06.jpg" data-sizes="auto" alt="基于树莓派4B本地驱动编译的环境搭建" class="lazyload">
+          <img data-src="/covers/04.jpg" data-sizes="auto" alt="基于树莓派4B本地驱动编译的环境搭建" class="lazyload">
         
       
     </div>
@@ -390,16 +425,16 @@ GPECON &amp;amp;&amp;#x3D; ~(3 &amp;lt;&amp;lt; 24); &amp;#x2F;&amp;#x2F;011 将
 </div>
   
     <div class="post-wrapper">
-  <div class="post-wrap-left" data-aos="fade-up">
+  <div class="post-wrap-right" data-aos="fade-up">
     
       <a class="post-link" href="/2024/11/23/FTP-file/" aria-label="使用FileZila与Linux传输文件"></a>
     
     
-    <div class="post-cover-left">
+    <div class="post-cover-right">
       
         
         
-          <img data-src="/covers/06.jpg" data-sizes="auto" alt="使用FileZila与Linux传输文件" class="lazyload">
+          <img data-src="/covers/04.jpg" data-sizes="auto" alt="使用FileZila与Linux传输文件" class="lazyload">
         
       
     </div>
@@ -426,16 +461,16 @@ sudo apt-get install vsftpd
 </div>
   
     <div class="post-wrapper">
-  <div class="post-wrap-right" data-aos="fade-up">
+  <div class="post-wrap-left" data-aos="fade-up">
     
       <a class="post-link" href="/2024/11/12/creat-blog/" aria-label="creat_blog"></a>
     
     
-    <div class="post-cover-right">
+    <div class="post-cover-left">
       
         
         
-          <img data-src="/covers/06.jpg" data-sizes="auto" alt="creat_blog" class="lazyload">
+          <img data-src="/covers/04.jpg" data-sizes="auto" alt="creat_blog" class="lazyload">
         
       
     </div>
@@ -461,12 +496,12 @@ sudo apt-get install vsftpd
 </div>
   
     <div class="post-wrapper">
-  <div class="post-wrap-left" data-aos="fade-up">
+  <div class="post-wrap-right" data-aos="fade-up">
     
       <a class="post-link" href="/2024/11/12/My-First-Markdown/" aria-label="My-First-Markdown"></a>
     
     
-    <div class="post-cover-left">
+    <div class="post-cover-right">
       
         
         
@@ -515,7 +550,7 @@ Markdown常见语法换行 在一行的末尾添加两个或多个空格，然�
 <div class="sidebar-state">
   <div class="sidebar-state-article">
     <div>文章</div>
-    <div class="sidebar-state-number">9</div>
+    <div class="sidebar-state-number">10</div>
   </div>
   <div class="sidebar-state-category">
     <div>分类</div>
@@ -598,10 +633,10 @@ Markdown常见语法换行 在一行的末尾添加两个或多个空格，然�
     
       <div>
         <span class="icon-brush"></span>
-        11.1k
+        12.9k
         &nbsp;|&nbsp;
         <span class="icon-coffee"></span>
-        00:43
+        00:50
       </div>
     
     
@@ -637,7 +672,7 @@ Markdown常见语法换行 在一行的末尾添加两个或多个空格，然�
 <div class="sidebar-state">
   <div class="sidebar-state-article">
     <div>文章</div>
-    <div class="sidebar-state-number">9</div>
+    <div class="sidebar-state-number">10</div>
   </div>
   <div class="sidebar-state-category">
     <div>分类</div>

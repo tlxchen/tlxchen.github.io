@@ -1,0 +1,649 @@
+
+  <!DOCTYPE html>
+  <html lang="zh-CN"  >
+  <head>
+  <meta charset="utf-8">
+  
+
+  
+
+  
+
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.code_block = {"expand":true};</script>
+  
+  <title>
+    2024全国电赛E题视觉部分 |
+    
+    TLX的主页
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic&display=swap" media="print" onload="this.media&#x3D;&#39;all&#39;">
+  
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_tq6stt6tcg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  
+  
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+  
+  
+    <meta name="description" content="写在前面此文档用于记录、以及介绍自己当时写的代码以及思路，另外让自己在重温一遍代码，感受一下自己当时有多蠢。此文档并没有改进打算，思路仅供参考。 项目简介使用STM32F103C8T6+openmv+串口屏。其中    STM32F103C8T6。负责接收openmv的下棋指令，控制机械臂下棋，以及转发(至openmv)人下棋的位置，像串口屏发送棋盘状态。 openmv。识别棋盘和棋子的状态；选择">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2024全国电赛E题视觉部分">
+<meta property="og:url" content="http://tlxchen.github.io/2025/03/01/2024%E5%85%A8%E5%9B%BD%E7%94%B5%E8%B5%9BE%E9%A2%98%E8%A7%86%E8%A7%89%E9%83%A8%E5%88%86/index.html">
+<meta property="og:site_name" content="TLX的主页">
+<meta property="og:description" content="写在前面此文档用于记录、以及介绍自己当时写的代码以及思路，另外让自己在重温一遍代码，感受一下自己当时有多蠢。此文档并没有改进打算，思路仅供参考。 项目简介使用STM32F103C8T6+openmv+串口屏。其中    STM32F103C8T6。负责接收openmv的下棋指令，控制机械臂下棋，以及转发(至openmv)人下棋的位置，像串口屏发送棋盘状态。 openmv。识别棋盘和棋子的状态；选择">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://tlxchen.github.io/2025/03/01/2024%E5%85%A8%E5%9B%BD%E7%94%B5%E8%B5%9BE%E9%A2%98%E8%A7%86%E8%A7%89%E9%83%A8%E5%88%86/pic1.png">
+<meta property="og:image" content="http://tlxchen.github.io/2025/03/01/2024%E5%85%A8%E5%9B%BD%E7%94%B5%E8%B5%9BE%E9%A2%98%E8%A7%86%E8%A7%89%E9%83%A8%E5%88%86/pic2.png">
+<meta property="article:published_time" content="2025-03-01T01:47:55.000Z">
+<meta property="article:modified_time" content="2025-03-01T06:49:17.047Z">
+<meta property="article:author" content="挺凉歙">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://tlxchen.github.io/2025/03/01/2024%E5%85%A8%E5%9B%BD%E7%94%B5%E8%B5%9BE%E9%A2%98%E8%A7%86%E8%A7%89%E9%83%A8%E5%88%86/pic1.png">
+  
+  
+    <link rel="alternate" href="/atom.xml" title="TLX的主页" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+  
+  
+  
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+  
+  
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.0/dist/aos.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    
+  <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi">
+        
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+        
+      </div>
+      <div class="loading-word">少女祈祷中...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script>
+
+<div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav">
+    
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/">首页</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/archives">归档</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/about">关于</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/friend">友链</a>
+        </span>
+      
+    
+    <a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav">
+    
+      <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅" target="_blank"></a>
+    
+    
+    
+  </nav>
+</div>
+<header id="header">
+  
+    
+      <img fetchpriority="high" src="/images/banner.webp" alt="2024全国电赛E题视觉部分">
+    
+  
+  <div id="header-outer">
+    <div id="header-title">
+      
+        
+        
+          <a href="/" id="logo">
+            <h1 data-aos="slide-up">2024全国电赛E题视觉部分</h1>
+          </a>
+        
+      
+      
+        
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+          
+        </h2>
+      
+    </div>
+  </div>
+</header>
+
+        <div id="content">
+          
+          <section id="main"><article id="post-2024全国电赛E题视觉部分" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <a href="/2025/03/01/2024%E5%85%A8%E5%9B%BD%E7%94%B5%E8%B5%9BE%E9%A2%98%E8%A7%86%E8%A7%89%E9%83%A8%E5%88%86/" class="article-date-link" data-aos="zoom-in">
+    <time datetime="2025-03-01T01:47:55.000Z" itemprop="datePublished">2025-03-01</time>
+    <time style="display: none;" id="post-update-time">2025-03-01</time>
+  </a>
+</div>
+
+      
+
+    </div>
+    <div class="hr-line"></div>
+    
+
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+      
+        <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>此文档用于记录、以及介绍自己当时写的代码以及思路，另外让自己在重温一遍代码，感受一下自己当时有多蠢。此文档并没有改进打算，思路仅供参考。</p>
+<h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><p>使用STM32F103C8T6+openmv+串口屏。其中  </p>
+<ul>
+<li>STM32F103C8T6。负责接收openmv的下棋指令，控制机械臂下棋，以及转发(至openmv)人下棋的位置，像串口屏发送棋盘状态。</li>
+<li>openmv。识别棋盘和棋子的状态；选择最优下棋方案，并向stm32发送下棋指令；识别人故意挪动棋子，并发送复位指令。</li>
+<li>串口屏。显示棋盘状态；提供下棋按钮，向stm32发送下棋位置；显示机械臂单次操作所耗时间。<br>因为我这里只有串口屏和openmv的代码，而串口屏只是一个简单的界面设计和显示，没什么可以讲的，使用这里只有openmv的程序流程图（有点不标准，见谅）。<br><img src="pic1.png" alt="流程图1"> <img src="pic2.png" alt="流程图2"></li>
+</ul>
+<h2 id="选材"><a href="#选材" class="headerlink" title="选材"></a>选材</h2><ol>
+<li>棋盘棋子选材。<br> 颜色选择：由于题目只要求了棋子的颜色，并未指定棋盘的背景颜色，因此棋盘最好选择与黑白对比度比较强的、不容易受光照影响的颜色。我们队选择的是红色。<br> 材料选择：棋盘是由A4纸彩印的；棋子方面，由于我们是控制电磁铁来进行拿放棋操作，因此方便使用贴有黑白两种颜色的圆形铁片(刚好有符合题目要求的圆形贴纸，铁片大小也符合题目要求，这个是由老师给我们提供的)。<br> 其实我后面还看到过别人用软管管来拿放棋操作（就是气压差，用管子把棋子吸起来，自己当时完全没想到这种方案）。<a href="'https://www.bilibili.com/video/BV1apijeUEMd/?spm_id_from=333.1387.homepage.video_card.click&vd_source=25f42b07e9234d9762eacae84b64c650'">参考视频</a></li>
+<li>摄像头选材。<br> 摄像头都有好几种吧，只是我们之前就是一直使用openMV，所以就只好选择openMV咯。其实也可以用树莓派或者K20，K20没怎么了解过，用树莓派的话，单独一个树莓派就可以了，也不用像我们一样STM32F1+openmv+串口屏这么麻烦，而且还有信号传输不太稳定的问题</li>
+</ol>
+<h2 id="代码分析"><a href="#代码分析" class="headerlink" title="代码分析"></a>代码分析</h2><h3 id="棋盘识别"><a href="#棋盘识别" class="headerlink" title="棋盘识别"></a>棋盘识别</h3><p>在棋盘格子序号确定的情况下，如果你已经有了1~9号格子对应的中心坐标，那么扫描棋盘就非常方便。因此一开始就要确定9个格子的中心坐标。下面是对应代码（和比赛使用的代码有区别，并不保证能直接使用，但思路可供参考）。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 完善棋盘的九个格子的中心坐标</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">colors_shape</span>(<span class="params">lst_k</span>):</span><br><span class="line"></span><br><span class="line">    <span class="keyword">global</span> mode,sqr_roi,aa</span><br><span class="line">    <span class="comment"># 从图片中找出红色大色块</span></span><br><span class="line">    blobs=img.find_blobs([threshold_R],margin=<span class="number">30</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 用于确定棋盘是否旋转：1 不旋转，0旋转。</span></span><br><span class="line">    flag_G=<span class="number">0</span></span><br><span class="line">    <span class="keyword">if</span> mode == <span class="number">4</span> <span class="keyword">or</span> mode == <span class="number">5</span> <span class="keyword">or</span> mode == <span class="number">6</span>:</span><br><span class="line">        flag_G=<span class="number">1</span></span><br><span class="line">    <span class="keyword">if</span> blobs:</span><br><span class="line">        b=find_max(blobs)   <span class="comment"># 从红色色块中找出最大的----棋盘</span></span><br><span class="line">        sqr_roi = b.rect()</span><br><span class="line">        img.draw_rectangle(b.rect(),color = (<span class="number">255</span>, <span class="number">255</span>, <span class="number">255</span>))</span><br><span class="line"><span class="comment">#        img.draw_line(b.major_axis_line())</span></span><br><span class="line">        <span class="comment"># 得到整个棋盘的四个角点的坐标（但未确定四个角点对应的实际位置）</span></span><br><span class="line">        lst1 = b.corners()</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 通过比较四个角点的位置，确定四个角点的实际位置</span></span><br><span class="line">        lst = [[<span class="number">0</span>,<span class="number">0</span>],[<span class="number">0</span>,<span class="number">0</span>],[<span class="number">0</span>,<span class="number">0</span>],[<span class="number">0</span>,<span class="number">0</span>]]</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>,<span class="number">4</span>):</span><br><span class="line">            <span class="keyword">if</span> lst1[i][<span class="number">0</span>]&lt;b.cx() <span class="keyword">and</span> lst1[i][<span class="number">1</span>]&lt;b.cy():</span><br><span class="line">                tmp=[<span class="number">0</span>,<span class="number">0</span>]</span><br><span class="line">                tmp[<span class="number">0</span>]=lst1[i][<span class="number">0</span>]</span><br><span class="line">                tmp[<span class="number">1</span>]=lst1[i][<span class="number">1</span>]</span><br><span class="line">                lst[<span class="number">0</span>] = tmp</span><br><span class="line">            <span class="keyword">elif</span> lst1[i][<span class="number">0</span>]&gt;b.cx() <span class="keyword">and</span> lst1[i][<span class="number">1</span>]&lt;b.cy():</span><br><span class="line">                tmp=[<span class="number">0</span>,<span class="number">0</span>]</span><br><span class="line">                tmp[<span class="number">0</span>]=lst1[i][<span class="number">0</span>]</span><br><span class="line">                tmp[<span class="number">1</span>]=lst1[i][<span class="number">1</span>]</span><br><span class="line">                lst[<span class="number">1</span>] = tmp</span><br><span class="line">            <span class="keyword">elif</span> lst1[i][<span class="number">0</span>]&lt;b.cx() <span class="keyword">and</span> lst1[i][<span class="number">1</span>]&gt;b.cy():</span><br><span class="line">                tmp=[<span class="number">0</span>,<span class="number">0</span>]</span><br><span class="line">                tmp[<span class="number">0</span>]=lst1[i][<span class="number">0</span>]</span><br><span class="line">                tmp[<span class="number">1</span>]=lst1[i][<span class="number">1</span>]</span><br><span class="line">                lst[<span class="number">3</span>] = tmp</span><br><span class="line">            <span class="keyword">elif</span> lst1[i][<span class="number">0</span>]&gt;b.cx() <span class="keyword">and</span> lst1[i][<span class="number">1</span>]&gt;b.cy():</span><br><span class="line">                tmp=[<span class="number">0</span>,<span class="number">0</span>]</span><br><span class="line">                tmp[<span class="number">0</span>]=lst1[i][<span class="number">0</span>]</span><br><span class="line">                tmp[<span class="number">1</span>]=lst1[i][<span class="number">1</span>]</span><br><span class="line">                lst[<span class="number">2</span>] = tmp</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment"># pz 为棋盘中心格子的中心坐标</span></span><br><span class="line">        pz = [b.cx(),b.cy()]</span><br><span class="line">        <span class="comment"># 如果在找四个角点的实际位置出现了失误，就认为不旋转，使用不旋转推导出每个格子对应的坐标</span></span><br><span class="line">        <span class="keyword">for</span> t <span class="keyword">in</span> lst:</span><br><span class="line">            <span class="keyword">if</span> t[<span class="number">0</span>]==<span class="number">0</span> <span class="keyword">and</span> t[<span class="number">1</span>]==<span class="number">0</span>:</span><br><span class="line">                flag_G=<span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 利用棋盘四个顶点的坐标，确定棋盘的旋转角度</span></span><br><span class="line">        <span class="keyword">if</span> flag_G == <span class="number">0</span>:</span><br><span class="line">            <span class="comment"># 顶点坐标</span></span><br><span class="line">            p0 = [lst[<span class="number">0</span>][<span class="number">0</span>],lst[<span class="number">0</span>][<span class="number">1</span>]]</span><br><span class="line">            p1 = [lst[<span class="number">1</span>][<span class="number">0</span>],lst[<span class="number">1</span>][<span class="number">1</span>]]</span><br><span class="line">            p2 = [lst[<span class="number">2</span>][<span class="number">0</span>],lst[<span class="number">2</span>][<span class="number">1</span>]]</span><br><span class="line">            p3 = [lst[<span class="number">3</span>][<span class="number">0</span>],lst[<span class="number">3</span>][<span class="number">1</span>]]</span><br><span class="line">    <span class="comment">#        print(p0,p1,p2,p3)</span></span><br><span class="line">            <span class="comment"># 计算棋盘的旋转角度</span></span><br><span class="line">            dx1 = p3[<span class="number">0</span>] - p0[<span class="number">0</span>]</span><br><span class="line">            dy1 = p3[<span class="number">1</span>] - p0[<span class="number">1</span>]</span><br><span class="line">            dx2 = p1[<span class="number">0</span>] - p0[<span class="number">0</span>]</span><br><span class="line">            dy2 = p1[<span class="number">1</span>] - p0[<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">            radian = math.atan2(dy1, dx1)</span><br><span class="line">            tmp = math.degrees(radian)-<span class="number">90</span></span><br><span class="line">            <span class="comment"># 感觉算出来的角度不准</span></span><br><span class="line">            <span class="keyword">if</span> tmp &lt;<span class="number">0</span> :</span><br><span class="line">                tmp -= <span class="number">3</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                tmp += <span class="number">3</span></span><br><span class="line">            tmp = <span class="built_in">round</span>(tmp)</span><br><span class="line">            aa = tmp</span><br><span class="line">        <span class="comment"># 利用棋盘四个顶点以及中心格子的坐标，以及棋盘每个格子的大小，确定棋盘每个格子的中心坐标</span></span><br><span class="line">        <span class="keyword">if</span> flag_G==<span class="number">1</span>:</span><br><span class="line">            <span class="comment"># 这里的45是图片中格子一半的的像素长度</span></span><br><span class="line">            lst_k[<span class="number">0</span>] = [pz[<span class="number">0</span>]-<span class="number">45</span>,pz[<span class="number">1</span>]-<span class="number">45</span>]</span><br><span class="line">            lst_k[<span class="number">1</span>] = [pz[<span class="number">0</span>],pz[<span class="number">1</span>]-<span class="number">45</span>]</span><br><span class="line">            lst_k[<span class="number">2</span>] = [pz[<span class="number">0</span>]+<span class="number">45</span>,pz[<span class="number">1</span>]-<span class="number">45</span>]</span><br><span class="line">            lst_k[<span class="number">3</span>] = [pz[<span class="number">0</span>]-<span class="number">45</span>,pz[<span class="number">1</span>]]</span><br><span class="line">            lst_k[<span class="number">4</span>] = [pz[<span class="number">0</span>],pz[<span class="number">1</span>]]</span><br><span class="line">            lst_k[<span class="number">5</span>] = [pz[<span class="number">0</span>]+<span class="number">45</span>,pz[<span class="number">1</span>]]</span><br><span class="line">            lst_k[<span class="number">6</span>] = [pz[<span class="number">0</span>]-<span class="number">45</span>,pz[<span class="number">1</span>]+<span class="number">45</span>]</span><br><span class="line">            lst_k[<span class="number">7</span>] = [pz[<span class="number">0</span>],pz[<span class="number">1</span>]+<span class="number">45</span>]</span><br><span class="line">            lst_k[<span class="number">8</span>] = [pz[<span class="number">0</span>]+<span class="number">45</span>,pz[<span class="number">1</span>]+<span class="number">45</span>]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># 这里是看棋盘向左旋转还是向右，dirt是方便后面的微调，因为感觉有的地方不太准</span></span><br><span class="line">            <span class="keyword">if</span> p0[<span class="number">0</span>]&lt;p3[<span class="number">0</span>]:</span><br><span class="line">                dirt = <span class="number">3</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                dirt=<span class="number">5</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># 利用相似计算其它格子的中心坐标</span></span><br><span class="line">            hz0 = [<span class="built_in">int</span>(p0[<span class="number">0</span>]+dx1/<span class="number">6</span>),<span class="built_in">int</span>(p0[<span class="number">1</span>]+dy1/<span class="number">6</span>)]</span><br><span class="line">            hz1 = [<span class="built_in">int</span>(p0[<span class="number">0</span>]+dx1/<span class="number">2</span>),<span class="built_in">int</span>(p0[<span class="number">1</span>]+dy1/<span class="number">2</span>)]</span><br><span class="line">            hz2 = [<span class="built_in">int</span>(p0[<span class="number">0</span>]+dx1*<span class="number">5</span>/<span class="number">6</span>),<span class="built_in">int</span>(p0[<span class="number">1</span>]+dy1*<span class="number">5</span>/<span class="number">6</span>)]</span><br><span class="line">            lst_k[<span class="number">0</span>] = [<span class="built_in">int</span>(hz0[<span class="number">0</span>]+dx2/<span class="number">6</span>),<span class="built_in">int</span>(hz0[<span class="number">1</span>]+dy2/<span class="number">6</span>)]</span><br><span class="line">            lst_k[<span class="number">1</span>] = [<span class="built_in">int</span>(hz0[<span class="number">0</span>]+dx2/<span class="number">2</span>),<span class="built_in">int</span>(hz0[<span class="number">1</span>]+dy2/<span class="number">2</span>)]</span><br><span class="line">            lst_k[<span class="number">2</span>] = [<span class="built_in">int</span>(hz0[<span class="number">0</span>]+dx2*<span class="number">5</span>/<span class="number">6</span>),<span class="built_in">int</span>(hz0[<span class="number">1</span>]+dy2*<span class="number">5</span>/<span class="number">6</span>)]</span><br><span class="line">            lst_k[<span class="number">3</span>] = [<span class="built_in">int</span>(hz1[<span class="number">0</span>]+dx2/<span class="number">6</span>),<span class="built_in">int</span>(hz1[<span class="number">1</span>]+dy2/<span class="number">6</span>)]</span><br><span class="line">            lst_k[<span class="number">4</span>] = [pz[<span class="number">0</span>],pz[<span class="number">1</span>]]</span><br><span class="line">            lst_k[<span class="number">5</span>] = [<span class="built_in">int</span>(hz1[<span class="number">0</span>]+dx2*<span class="number">5</span>/<span class="number">6</span>),<span class="built_in">int</span>(hz1[<span class="number">1</span>]+dy2*<span class="number">5</span>/<span class="number">6</span>)]</span><br><span class="line">            lst_k[<span class="number">6</span>] = [<span class="built_in">int</span>(hz2[<span class="number">0</span>]+dx2/<span class="number">6</span>),<span class="built_in">int</span>(hz2[<span class="number">1</span>]+dy2/<span class="number">6</span>)]</span><br><span class="line">            lst_k[<span class="number">7</span>] = [<span class="built_in">int</span>(hz2[<span class="number">0</span>]+dx2/<span class="number">2</span>),<span class="built_in">int</span>(hz2[<span class="number">1</span>]+dy2/<span class="number">2</span>)]</span><br><span class="line">            lst_k[<span class="number">8</span>] = [<span class="built_in">int</span>(hz2[<span class="number">0</span>]+dx2*<span class="number">5</span>/<span class="number">6</span>+dirt),<span class="built_in">int</span>(hz2[<span class="number">1</span>]+dy2*<span class="number">5</span>/<span class="number">6</span>)+dirt]</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>有了1~9号格子对应的中心坐标，那么扫描棋盘就很简单了，只需要分别检测中心坐标周围（比棋子的范围稍小一点）是黑色还是白色，然后更改储存棋盘棋子的列表。如果是人可能移动棋子，那么还得将现在的棋盘与下之前的棋盘相比较。代码这里就不贴了，太长了，但是我把链接放文末了。<br>关于下棋策略，我这里是分别判断所有情况，比较笨的方法。</p>
+<h2 id="对此次的感想"><a href="#对此次的感想" class="headerlink" title="对此次的感想"></a>对此次的感想</h2><ul>
+<li>毕竟是自己写的，当时为了结果好多地方都没思考完全，导致整个结构就很混乱。</li>
+<li>另外每个模块间的串口通讯也没设计好，收发-应答没有写好，可能也正是这个原因才导致评测的时候系统卡死（悲）。下次应该准备好收发-应答，最好多一个校验，没有应答就重发之类的。</li>
+<li>还有，注释也要写清楚，这次看之前的代码差点看不懂了。<br><a href>源码地址</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      
+      
+      
+      
+      
+      
+      
+
+    </footer>
+  </div>
+  
+  <nav id="article-nav" data-aos="fade-up">
+    
+    
+    <div class="article-nav-link-wrap article-nav-link-right">
+      
+        
+        
+          <img data-src="/covers/04.jpg" data-sizes="auto" alt="FreeRtos学习" class="lazyload">
+        
+      
+      <a href="/2025/02/14/note3-md/"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+        
+          FreeRtos学习
+        
+      </h3>
+    </div>
+    
+  </nav>
+
+
+</article>
+
+
+
+
+
+
+</section>
+          
+            <aside id="sidebar">
+  <div class="sidebar-wrapper wrap-sticky">
+    <div class="sidebar-wrap" data-aos="fade-up">
+      
+        <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="toc-number">1.</span> <span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E7%AE%80%E4%BB%8B"><span class="toc-number">2.</span> <span class="toc-text">项目简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%89%E6%9D%90"><span class="toc-number">3.</span> <span class="toc-text">选材</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90"><span class="toc-number">4.</span> <span class="toc-text">代码分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A3%8B%E7%9B%98%E8%AF%86%E5%88%AB"><span class="toc-number">4.1.</span> <span class="toc-text">棋盘识别</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E6%AD%A4%E6%AC%A1%E7%9A%84%E6%84%9F%E6%83%B3"><span class="toc-number">5.</span> <span class="toc-text">对此次的感想</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="挺凉歙" class="lazyload">
+  <div class="sidebar-author-name">挺凉歙</div>
+  <div class="sidebar-description"></div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">10</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">0</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">0</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+      
+      
+        <div class="sidebar-btn-wrapper" style="position:static">
+          <div class="sidebar-toc-btn current"></div>
+          <div class="sidebar-common-btn"></div>
+        </div>
+      
+    </div>
+  </div>
+
+  
+</aside>
+
+          
+        </div>
+        <footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    
+    <div>
+      <span class="icon-copyright"></span>
+      2020-2025
+      <span class="footer-info-sep rotate"></span>
+      挺凉歙
+    </div>
+    
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener external nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+    
+    
+      <div>
+        <span class="icon-brush"></span>
+        12.9k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        00:50
+      </div>
+    
+    
+    
+    
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+    
+  </div>
+</footer>
+
+        
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav">
+  <div class="sidebar-wrap">
+    
+      <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="toc-number">1.</span> <span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E7%AE%80%E4%BB%8B"><span class="toc-number">2.</span> <span class="toc-text">项目简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%89%E6%9D%90"><span class="toc-number">3.</span> <span class="toc-text">选材</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90"><span class="toc-number">4.</span> <span class="toc-text">代码分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A3%8B%E7%9B%98%E8%AF%86%E5%88%AB"><span class="toc-number">4.1.</span> <span class="toc-text">棋盘识别</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E6%AD%A4%E6%AC%A1%E7%9A%84%E6%84%9F%E6%83%B3"><span class="toc-number">5.</span> <span class="toc-text">对此次的感想</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+      <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="挺凉歙" class="lazyload">
+  <div class="sidebar-author-name">挺凉歙</div>
+  <div class="sidebar-description"></div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">10</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">0</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">0</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+    
+  </div>
+  
+    <div class="sidebar-btn-wrapper">
+      <div class="sidebar-toc-btn current"></div>
+      <div class="sidebar-common-btn"></div>
+    </div>
+  
+</nav>
+
+    </div>
+    
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+
+
+
+
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.0.6/dist/index.umd.js" integrity="sha384-vkGvf25gm1C1PbcoD5dNfc137HzNL&#x2F;hr1RKA5HniJOaawtvUmH5lTVFgFAruE9Ge" crossorigin="anonymous"></script>
+
+  <script>
+    window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["#ff5252","#ff7c7c","#ffafaf","#ffd0d0"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["#ff0000"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'))
+  </script>
+
+
+
+
+
+  <script>
+    function initLive2d() {
+      live2d.init("https://fastly.jsdelivr.net/gh/D-Sketon/plugin-live2d/", {themeTipsPath: ""});
+    }
+  </script>
+  
+<script src="https://fastly.jsdelivr.net/gh/D-Sketon/plugin-live2d/js/live2d-autoload.js" onload="initLive2d &amp;&amp; initLive2d()" async></script>
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+    
+    
+      
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+    
+    
+      <script type="module" data-pjax>
+        const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+        
+        const pswp = () => {
+          if (_$$('.article-entry a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-entry',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          if(_$$('.article-gallery a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-gallery',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          window.lightboxStatus = 'done';
+          window.removeEventListener('lightbox:ready', pswp);
+        }
+        if(window.lightboxStatus === 'ready') {
+          pswp()
+        } else {
+          window.addEventListener('lightbox:ready', pswp);
+        }
+      </script>
+      
+
+
+
+
+
+
+
+
+    
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.1.0' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+
+  </body>
+  </html>
+
