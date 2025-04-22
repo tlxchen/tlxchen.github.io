@@ -12,7 +12,6 @@
   <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.code_block = {"expand":true};</script>
   
   <title>
-    归档: 2024/12 |
     
     TLX的主页
   </title>
@@ -29,7 +28,7 @@
   
     <meta property="og:type" content="website">
 <meta property="og:title" content="TLX的主页">
-<meta property="og:url" content="http://tlxchen.github.io/archives/2024/12/index.html">
+<meta property="og:url" content="http://tlxchen.github.io/page/2/index.html">
 <meta property="og:site_name" content="TLX的主页">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://tlxchen.github.io/images/banner.webp">
@@ -167,15 +166,13 @@
         
         
           <a href="/" id="logo">
-            <h1 data-aos="slide-up">归档</h1>
+            <h1 data-aos="slide-up">TLX的主页</h1>
           </a>
         
       
       
         
         <h2 id="subtitle-wrap" data-aos="slide-down">
-          
-            <a href="/" id="subtitle">2024/12</a>
           
         </h2>
       
@@ -186,43 +183,158 @@
         <div id="content">
           
           <section id="main">
-<div class="archives-outer-wrap" data-aos="fade-up">
-  <div class="tag-wrap">
-    
-  </div>
-  <div class="category-wrap">
-    
-  </div>
   
   
+    <div class="post-wrapper">
+  <div class="post-wrap-left" data-aos="fade-up">
+    
+      <a class="post-link" href="/2024/11/27/rpi-kernel/" aria-label="基于树莓派4B本地驱动编译的环境搭建"></a>
     
     
+    <div class="post-cover-left">
       
+        
+        
+          <img data-src="/covers/04.jpg" data-sizes="auto" alt="基于树莓派4B本地驱动编译的环境搭建" class="lazyload">
+        
       
-      <section class="archives-wrap" data-aos="fade-up">
-        <div class="archive-year-wrap">
-          <a href="/archives/2024" class="archive-year">2024</a>
-        </div>
-        <ul>
-          
-          <li class="archive-article">
-  <div class="archive-article-date-wrap">
-    <a href="/2024/12/08/gpio-md/">
-      <time class="dt-published" datetime="2024-12-08T05:50:10.000Z" itemprop="datePublished">12-08</time>
-    </a>
-  </div>
-  
-    <a class="archive-article-title" href="/2024/12/08/gpio-md/">树莓派4B-GPIO驱动</a>
-  
-</li>
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2024-11-27</span>
+        <span><span class="icon-pencil"></span>1.1k 字</span>
+        <span><span class="icon-clock"></span>4 分钟</span>
+      </div>
+      <h2 class="post-title">基于树莓派4B本地驱动编译的环境搭建</h2>
+      <article class="post-article">
+        
+          前言说实话，这个环境搭建真的要把我折磨死了（虽然是因为我对驱动编译的流程太不熟悉了），最终在11月27日的上午实现第一个helloworld驱动，泪目了。其实本来打算做交叉编译的，不断在网上找教程搞了一周也没弄出来，这才意识到自己好像有点太急了，于是降低目标，进行树莓派本地驱动编译环境搭建。 
+所需准备对于驱动编译，你首先得有
 
-          
-          
-        </ul>
-      </section>
-  
-  </div>
+内核源码,而且必须与你当前内核版本相同编译工具，本地编译还挺容易获取的，但是如果是交叉编译的话，得自己去找。
 
+内核源码获取正常来说，从官网获与你当前内核版本相同的源码即可，但是我并没有成功，于是我将从官网下载的内核源码编译并生成了一个新内核，然后替换当前内核，这样我
+        
+      </article>
+    </div>
+  </div>
+</div>
+  
+    <div class="post-wrapper">
+  <div class="post-wrap-right" data-aos="fade-up">
+    
+      <a class="post-link" href="/2024/11/23/FTP-file/" aria-label="使用FileZila与Linux传输文件"></a>
+    
+    
+    <div class="post-cover-right">
+      
+        
+        
+          <img data-src="/covers/04.jpg" data-sizes="auto" alt="使用FileZila与Linux传输文件" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2024-11-23</span>
+        <span><span class="icon-pencil"></span>303 字</span>
+        <span><span class="icon-clock"></span>1 分钟</span>
+      </div>
+      <h2 class="post-title">使用FileZila与Linux传输文件</h2>
+      <article class="post-article">
+        
+          使用FTP快速与Linux传输文件前言一般使用Linux都是直接在电脑上开一个虚拟机，在很多时候都需要把本地的文件传到虚拟机里面去，我用的虚拟机软件是Vmware,每次我想传文件都叫我先安装什么Vmware-tool，一直没安装上。后来在网上看到使用FTP传输文件，这次趁着刚建了一个白板Linux，写一篇给自己用的教程。没办法自己太笨了，过段时间又忘了。
+前期准备
+电脑安装软件 FileZila，找个 官网 下载即可。   
+虚拟机上要求要联网，而且要安装FTP服务。在Linux终端窗口输入以下命令安装FTP服务。
+sudo apt-get install vsftpd  
+
+ 更改相关配置文
+        
+      </article>
+    </div>
+  </div>
+</div>
+  
+    <div class="post-wrapper">
+  <div class="post-wrap-left" data-aos="fade-up">
+    
+      <a class="post-link" href="/2024/11/12/creat-blog/" aria-label="creat_blog"></a>
+    
+    
+    <div class="post-cover-left">
+      
+        
+        
+          <img data-src="/covers/02.jpg" data-sizes="auto" alt="creat_blog" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2024-11-12</span>
+        <span><span class="icon-pencil"></span>561 字</span>
+        <span><span class="icon-clock"></span>2 分钟</span>
+      </div>
+      <h2 class="post-title">creat_blog</h2>
+      <article class="post-article">
+        
+          如何利用hexo在GitHub上搭建自己的个人博客前言我想应该没有人能拒绝能拥有一个自己的网站的机会吧。欸，那我这篇文章就刚好合适是一个低配版解决法案。其实我很早之前就有搭一个博客的想法了，奈何太难了v……v。刚好前几天发现一个用hexo和GitHub搭建静态博客（应该是静态吧），我就跟着教程尝试了一下，没想到真的弄好了基本弄好了。
+环境安装首先跟着教程把基本环境安装好，注意安装cnpm的淘宝镜像已经过期了，我用的这个：
+
+ npm install -g cnpm –registry&amp;#x3D;https://registry.npmmirror.com
+
+初始化有了初始环境后，新一个文件夹B
+        
+      </article>
+    </div>
+  </div>
+</div>
+  
+    <div class="post-wrapper">
+  <div class="post-wrap-right" data-aos="fade-up">
+    
+      <a class="post-link" href="/2024/11/12/My-First-Markdown/" aria-label="My-First-Markdown"></a>
+    
+    
+    <div class="post-cover-right">
+      
+        
+        
+          <img data-src="/covers/04.jpg" data-sizes="auto" alt="My-First-Markdown" class="lazyload">
+        
+      
+    </div>
+    <div class="post-info">
+      <div class="post-meta">
+        <span><span class="icon-calendar"></span>2024-11-12</span>
+        <span><span class="icon-pencil"></span>1.4k 字</span>
+        <span><span class="icon-clock"></span>4 分钟</span>
+      </div>
+      <h2 class="post-title">My-First-Markdown</h2>
+      <article class="post-article">
+        
+          初次写Markdown文件缘由  都不知道在什么时候，从网上找到一个老哥的学习笔记(我勒个老天，这哥们学了这么多东西，同时还写了这么多笔记.  虽然好多笔记我还看不懂，但是我还是挺佩服他的)遂以此，写下我的垃圾笔记，记录我的学习经历，也不清楚我能坚持多久。
+Markdown常见语法换行 在一行的末尾添加两个或多个空格，然后按回车键,即可创建一个换行。引用  
+
+要创建块引用，请在段落前添加一个 &amp;gt; 符号。  
+块引用可以包含多个段落。为段落之间的空白行添加一个 &amp;gt; 符号。
+
+块引用可以嵌套。在要嵌套的段落前添加一个 &amp;gt;&amp;gt; 符号。
+
+块引用可以包含其他 Markdown 
+        
+      </article>
+    </div>
+  </div>
+</div>
+  
+
+
+  <nav id="page-nav" data-aos="fade-up">
+    
+    <a class="extend prev" rel="prev" href="/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+  </nav>
 
 
 </section>

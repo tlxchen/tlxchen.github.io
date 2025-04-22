@@ -1,0 +1,642 @@
+
+  <!DOCTYPE html>
+  <html lang="zh-CN"  >
+  <head>
+  <meta charset="utf-8">
+  
+
+  
+
+  
+
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.code_block = {"expand":true};</script>
+  
+  <title>
+    handle |
+    
+    TLX的主页
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic&display=swap" media="print" onload="this.media&#x3D;&#39;all&#39;">
+  
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_tq6stt6tcg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  
+  
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+  
+  
+    <meta name="description" content="带显示界面的无线手柄项目简介项目设计LCD驱动移植参考链接,注意SPI传输速率不能超过ST7735。 freeRTOS移植参考链接。 LVGL移植参考链接。刷新函数 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960#inclu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="handle">
+<meta property="og:url" content="http://tlxchen.github.io/2025/04/10/handle/index.html">
+<meta property="og:site_name" content="TLX的主页">
+<meta property="og:description" content="带显示界面的无线手柄项目简介项目设计LCD驱动移植参考链接,注意SPI传输速率不能超过ST7735。 freeRTOS移植参考链接。 LVGL移植参考链接。刷新函数 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960#inclu">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-04-10T01:06:42.000Z">
+<meta property="article:modified_time" content="2025-04-17T00:24:38.333Z">
+<meta property="article:author" content="挺凉歙">
+<meta name="twitter:card" content="summary">
+  
+  
+    <link rel="alternate" href="/atom.xml" title="TLX的主页" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+  
+  
+  
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+  
+  
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.0/dist/aos.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    
+  <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi">
+        
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+        
+      </div>
+      <div class="loading-word">少女祈祷中...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script>
+
+<div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav">
+    
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/">首页</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/archives">归档</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/about">关于</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/friend">友链</a>
+        </span>
+      
+    
+    <a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav">
+    
+      <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅" target="_blank"></a>
+    
+    
+    
+  </nav>
+</div>
+<header id="header">
+  
+    
+      <img fetchpriority="high" src="/images/banner.webp" alt="handle">
+    
+  
+  <div id="header-outer">
+    <div id="header-title">
+      
+        
+        
+          <a href="/" id="logo">
+            <h1 data-aos="slide-up">handle</h1>
+          </a>
+        
+      
+      
+        
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+          
+        </h2>
+      
+    </div>
+  </div>
+</header>
+
+        <div id="content">
+          
+          <section id="main"><article id="post-handle" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <a href="/2025/04/10/handle/" class="article-date-link" data-aos="zoom-in">
+    <time datetime="2025-04-10T01:06:42.000Z" itemprop="datePublished">2025-04-10</time>
+    <time style="display: none;" id="post-update-time">2025-04-17</time>
+  </a>
+</div>
+
+      
+
+    </div>
+    <div class="hr-line"></div>
+    
+
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+      
+        <h1 id="带显示界面的无线手柄"><a href="#带显示界面的无线手柄" class="headerlink" title="带显示界面的无线手柄"></a>带显示界面的无线手柄</h1><h2 id="项目简介"><a href="#项目简介" class="headerlink" title="项目简介"></a>项目简介</h2><h2 id="项目设计"><a href="#项目设计" class="headerlink" title="项目设计"></a>项目设计</h2><h3 id="LCD驱动移植"><a href="#LCD驱动移植" class="headerlink" title="LCD驱动移植"></a>LCD驱动移植</h3><p>参考<a target="_blank" rel="noopener" href="https://stm32withoutfear.blogspot.com/2019/03/stm32-lcd-st7735.html">链接</a>,注意SPI传输速率不能超过ST7735。</p>
+<h3 id="freeRTOS移植"><a href="#freeRTOS移植" class="headerlink" title="freeRTOS移植"></a>freeRTOS移植</h3><p>参考<a target="_blank" rel="noopener" href="https://shequ.stmicroelectronics.cn/thread-634284-1-1.html">链接</a>。</p>
+<h3 id="LVGL移植"><a href="#LVGL移植" class="headerlink" title="LVGL移植"></a>LVGL移植</h3><p>参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_59953808/article/details/126445608">链接</a>。<br>刷新函数</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;mytask.h&quot;</span></span></span><br><span class="line"><span class="keyword">extern</span> SemaphoreHandle_t xLCD_DMA_Semaphore;</span><br><span class="line"><span class="keyword">extern</span> <span class="type">uint8_t</span> dma_end;</span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">disp_flush</span><span class="params">(<span class="type">lv_disp_drv_t</span> * disp_drv, <span class="type">const</span> <span class="type">lv_area_t</span> * area, <span class="type">lv_color_t</span> * color_p)</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="comment">//    if(disp_flush_enabled) &#123;</span></span><br><span class="line"><span class="comment">//        /*The most simple case (but also the slowest) to put all pixels to the screen one-by-one*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//        int32_t x;</span></span><br><span class="line"><span class="comment">//        int32_t y;</span></span><br><span class="line"><span class="comment">//        for(y = area-&gt;y1; y &lt;= area-&gt;y2; y++) &#123;</span></span><br><span class="line"><span class="comment">//            for(x = area-&gt;x1; x &lt;= area-&gt;x2; x++) &#123;</span></span><br><span class="line"><span class="comment">//                /*Put a pixel to the display. For example:*/</span></span><br><span class="line"><span class="comment">//                /*put_px(x, y, *color_p)*/</span></span><br><span class="line"><span class="comment">//								</span></span><br><span class="line"><span class="comment">//                color_p++;</span></span><br><span class="line"><span class="comment">//            &#125;</span></span><br><span class="line"><span class="comment">//        &#125;</span></span><br><span class="line"><span class="comment">//    &#125;</span></span><br><span class="line"></span><br><span class="line">		my_disp_flush(area,color_p);</span><br><span class="line">		<span class="keyword">while</span>(!dma_end)</span><br><span class="line">				;</span><br><span class="line">    <span class="comment">/*IMPORTANT!!!</span></span><br><span class="line"><span class="comment">     *Inform the graphics library that you are ready with the flushing*/</span></span><br><span class="line">    lv_disp_flush_ready(disp_drv);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//my_disp_flush在Lcd_Driver.c文件中</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">my_disp_flush</span><span class="params">(<span class="type">const</span> <span class="type">lv_area_t</span> *area, <span class="type">lv_color_t</span> *color_p)</span> </span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">uint16_t</span> w = area-&gt;x2 - area-&gt;x1 + <span class="number">1</span>;</span><br><span class="line">    <span class="type">uint16_t</span> h = area-&gt;y2 - area-&gt;y1 + <span class="number">1</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> ((w == <span class="number">0</span>) || (h == <span class="number">0</span>)) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    TFT_CS_L();</span><br><span class="line">    ST7735_SetAddressWindow(area-&gt;x1, area-&gt;y1, area-&gt;x2, area-&gt;y2);</span><br><span class="line">    TFT_DC_D();</span><br><span class="line"></span><br><span class="line">    <span class="type">uint16_t</span> buffer_size = w * h;</span><br><span class="line">    <span class="type">uint8_t</span> spi_buffer[buffer_size * <span class="number">2</span>];  <span class="comment">// 16-bit color needs 2 bytes per pixel</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将LVGL颜色缓冲区转换为SPI传输格式</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">uint32_t</span> i = <span class="number">0</span>; i &lt; buffer_size; i++) &#123;</span><br><span class="line">        spi_buffer[i * <span class="number">2</span>]     = color_p[i].full &gt;&gt; <span class="number">8</span>;   <span class="comment">// 高8位</span></span><br><span class="line">        spi_buffer[i * <span class="number">2</span> + <span class="number">1</span>] = color_p[i].full &amp; <span class="number">0xFF</span>; <span class="comment">// 低8位</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> USE_SPI_DMA</span></span><br><span class="line">    HAL_SPI_Transmit_DMA(&amp;ST7735_SPI_PORT, spi_buffer, <span class="keyword">sizeof</span>(spi_buffer));</span><br><span class="line">    <span class="keyword">while</span> (ST7735_SPI_PORT.State == HAL_SPI_STATE_BUSY_TX) &#123;&#125;;  <span class="comment">// 等待DMA完成</span></span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line">    HAL_SPI_Transmit(&amp;ST7735_SPI_PORT, spi_buffer, <span class="keyword">sizeof</span>(spi_buffer), HAL_MAX_DELAY);</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line">    TFT_CS_H();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="LVGL-页面管理器开发"><a href="#LVGL-页面管理器开发" class="headerlink" title="LVGL 页面管理器开发"></a>LVGL 页面管理器开发</h3><p>页面管理器采用栈结构，其中页面结构体设计如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//页面名</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">enum</span>&#123;</span></span><br><span class="line">	NonePage,</span><br><span class="line">	MainPage,</span><br><span class="line">	SettingPage,</span><br><span class="line">&#125;PageName;</span><br><span class="line"></span><br><span class="line"><span class="comment">//页面创建回调函数</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="title function_">void</span> <span class="params">(*PageCreateCallback)</span><span class="params">(<span class="type">lv_obj_t</span>* curPage,<span class="type">void</span>* data)</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//页面栈结构</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    PageCreateCallback create_cb;       <span class="comment">//页面创建回调函数</span></span><br><span class="line">    <span class="type">lv_obj_t</span>* page;                     <span class="comment">//页面对象</span></span><br><span class="line">    <span class="type">int</span> enter_anim;                    	<span class="comment">//页面进入动画</span></span><br><span class="line">    <span class="type">int</span> exit_anim;                     	<span class="comment">//页面退出动画</span></span><br><span class="line">	PageName page_name;					<span class="comment">//页面名</span></span><br><span class="line">    <span class="type">void</span>* data;                         <span class="comment">//私有参数</span></span><br><span class="line">&#125;PageStackItem;</span><br></pre></td></tr></table></figure>
+<p>首先静态创建页面栈<code>PageStackItem page_stack[MAX_STACK_DEPTH]</code> ,并将页面栈初始化。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//初始化页面栈</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">PageStackInit</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//创建页面栈信号量</span></span><br><span class="line">    <span class="comment">//xSemaphore = xSemaphoreCreateMutex();</span></span><br><span class="line">    stack_top = <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">// memset(page_stack, 0, sizeof(page_stack));</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>每当进入一个新页面时执行入栈操作。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//页面入栈</span></span><br><span class="line"><span class="type">bool</span> <span class="title function_">PageStackPush</span><span class="params">(<span class="type">int</span> enter_anim,<span class="type">int</span> exit_anim,PageCreateCallback createpage_cb,PageName page_name,<span class="type">void</span>* data)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//等待页面栈信号量</span></span><br><span class="line">    <span class="comment">//if(xSemaphoreTake(xSemaphore, portMAX_DELAY) != pdTRUE)</span></span><br><span class="line">    <span class="keyword">if</span>(stack_top &gt;= MAX_STACK_DEPTH - <span class="number">1</span>)<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//入栈</span></span><br><span class="line">    stack_top++;</span><br><span class="line">    page_stack[stack_top].create_cb = createpage_cb;</span><br><span class="line">    page_stack[stack_top].page = lv_obj_create(<span class="literal">NULL</span>);</span><br><span class="line">    <span class="keyword">if</span>(enter_anim == <span class="number">0</span>)</span><br><span class="line">        page_stack[stack_top].enter_anim = LV_SCR_LOAD_ANIM_FADE_ON;    <span class="comment">// 默认动画</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        page_stack[stack_top].enter_anim = enter_anim;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(exit_anim == <span class="number">0</span>)</span><br><span class="line">        page_stack[stack_top].exit_anim = LV_SCR_LOAD_ANIM_OVER_BOTTOM; <span class="comment">//默认动画</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        page_stack[stack_top].exit_anim = exit_anim;</span><br><span class="line">		</span><br><span class="line">		page_stack[stack_top].page_name = page_name;</span><br><span class="line">    page_stack[stack_top].data = data;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(page_stack[stack_top].page == <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//释放页面栈信号量</span></span><br><span class="line">        <span class="comment">//xSemaphoreGive(xSemaphore);</span></span><br><span class="line">        stack_top--;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//创建页面</span></span><br><span class="line">    createpage_cb(page_stack[stack_top].page,data);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//执行页面切换动画</span></span><br><span class="line">    <span class="keyword">if</span>(stack_top != <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//如果不是第一个页面，就在切换动画时把之前的页面删除</span></span><br><span class="line">        lv_scr_load_anim(page_stack[stack_top].page, page_stack[stack_top].enter_anim, <span class="number">200</span>, <span class="number">0</span>, <span class="literal">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//是第一个页面，就在只切换动画</span></span><br><span class="line">        lv_scr_load(page_stack[stack_top].page);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//xSemaphoreGive(xSemaphore);</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>每当返回上一个页面时执行出栈操作：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//页面出栈</span></span><br><span class="line"><span class="type">bool</span> <span class="title function_">PageStackPop</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//等待页面栈信号量</span></span><br><span class="line">    <span class="comment">//if(xSemaphoreTake(xSemaphore, portMAX_DELAY) != pdTRUE)</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(stack_top &lt;= <span class="number">0</span>)<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    stack_top--;</span><br><span class="line"></span><br><span class="line">    page_stack[stack_top].page = lv_obj_create(<span class="literal">NULL</span>);</span><br><span class="line">    <span class="comment">//恢复上一个页面</span></span><br><span class="line">    page_stack[stack_top].create_cb(page_stack[stack_top].page,page_stack[stack_top].data);</span><br><span class="line">    <span class="comment">//执行页面切换动画</span></span><br><span class="line">    lv_scr_load_anim(page_stack[stack_top].page, page_stack[stack_top+<span class="number">1</span>].exit_anim, <span class="number">200</span>, <span class="number">0</span>, <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//释放页面栈信号量</span></span><br><span class="line">    <span class="comment">//xSemaphoreGive(xSemaphore);</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>每个页面的所有按钮都是由一个静态数组存储，由于LCD屏幕没有触摸功能，也没有移植lvgl 输入设备，所以选择了使用自定义函数来控制这些按键选择<br>和按下。每个页面都必须实现按钮选择函数和按钮确认函数，如Main页面：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * @brief  当前页面改变选择按钮函数</span></span><br><span class="line"><span class="comment">	* @param  NULL</span></span><br><span class="line"><span class="comment">  * @retval NULL</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">select_btn_Main</span><span class="params">(<span class="type">int</span> value)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">lv_obj_t</span>* cur_Page = getCurPage();</span><br><span class="line">	</span><br><span class="line">	lv_obj_set_user_data(cur_Page, (<span class="type">void</span>*)(<span class="type">intptr_t</span>)(value));</span><br><span class="line">	lv_event_send(cur_Page, LV_EVENT_KEY, <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">	uart_debug_print(<span class="string">&quot;select btn &quot;</span>,select_btn);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * @brief  当前页面 确定选择按钮函数</span></span><br><span class="line"><span class="comment">	* @param  NULL</span></span><br><span class="line"><span class="comment">  * @retval NULL</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">btns_Main</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	lv_event_send(main_btns[select_btn], LV_EVENT_CLICKED,<span class="literal">NULL</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>它们将由以下两个函数统一调用：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*按钮切换函数*/</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">change_select_btn</span><span class="params">(<span class="type">int</span> dirt)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//获取当前页面名</span></span><br><span class="line">	PageName curpage = getCurPageName();</span><br><span class="line">    <span class="comment">//参数dirt是确定按钮切换方向</span></span><br><span class="line">	<span class="keyword">if</span>(curpage == MainPage)</span><br><span class="line">		select_btn_Main(dirt);</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span>(curpage == SettingPage)</span><br><span class="line">		select_btn_Set(dirt);;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//按钮点击</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">click_btn</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//获取当前页面名</span></span><br><span class="line">	PageName curpage = getCurPageName();</span><br><span class="line">	<span class="keyword">if</span>(curpage == MainPage)</span><br><span class="line">		btns_Main();</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span>(curpage == SettingPage)</span><br><span class="line">		btns_Set();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样只需要在合适的地方调用change_select_btn和click_btn就能实现按钮的切换和点击。<br>页面管理器其它函数：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * @brief  初始化页面栈</span></span><br><span class="line"><span class="comment">	* @param  NULL</span></span><br><span class="line"><span class="comment">  * @retval NULL</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">PageStackInit</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//创建页面栈信号量</span></span><br><span class="line">    <span class="comment">//xSemaphore = xSemaphoreCreateMutex();</span></span><br><span class="line">    stack_top = <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">// memset(page_stack, 0, sizeof(page_stack));</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * @brief  获取当前页面名</span></span><br><span class="line"><span class="comment">	* @param  NULL</span></span><br><span class="line"><span class="comment">  * @retval 页面名</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">PageName <span class="title function_">getCurPageName</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(stack_top &lt; <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> NonePage;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> page_stack[stack_top].page_name;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * @brief  获取当前页面对象</span></span><br><span class="line"><span class="comment">	* @param  NULL</span></span><br><span class="line"><span class="comment">  * @retval 页面对象</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"><span class="type">lv_obj_t</span>* <span class="title function_">getCurPage</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(stack_top &lt; <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> page_stack[stack_top].page;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="LVGL-页面设计"><a href="#LVGL-页面设计" class="headerlink" title="LVGL 页面设计"></a>LVGL 页面设计</h3><p>目前只有两个页面：MainPage和SettingPage。<br>ManPage为6个圆形按钮组成正六边形以及中间一个按钮，每次切换按钮时都会进行一次轮换当前按钮会向下一个按钮的位置移动，按钮动画以及更新函数如下：  </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 更新按钮布局</span></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">update_button_layout</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; Main_BTNS_CNT; i++) &#123;</span><br><span class="line">			<span class="type">int</span> x = layout_xy[(btn_changeIdx + i) % Main_BTNS_CNT][<span class="number">0</span>]+<span class="number">5</span>;</span><br><span class="line">			<span class="type">int</span> y = layout_xy[(btn_changeIdx + i) % Main_BTNS_CNT][<span class="number">1</span>]+<span class="number">10</span>;</span><br><span class="line">			<span class="keyword">if</span>(i == select_btn)</span><br><span class="line">			&#123;</span><br><span class="line">					<span class="comment">// 尺寸动画，当被选中按钮移动到中间时，自行放大</span></span><br><span class="line">					<span class="type">lv_anim_t</span> anim_size;</span><br><span class="line">					lv_anim_init(&amp;anim_size);</span><br><span class="line">					lv_anim_set_var(&amp;anim_size, main_btns[i]);</span><br><span class="line">					lv_anim_set_time(&amp;anim_size, <span class="number">200</span>);</span><br><span class="line">					lv_anim_set_values(&amp;anim_size, lv_obj_get_width(main_btns[i]), <span class="number">30</span>);</span><br><span class="line">					lv_anim_set_exec_cb(&amp;anim_size, (<span class="type">lv_anim_exec_xcb_t</span>)lv_obj_set_width);</span><br><span class="line">					lv_anim_start(&amp;anim_size);</span><br><span class="line">			&#125;<span class="keyword">else</span></span><br><span class="line">			&#123;</span><br><span class="line">					<span class="comment">// 尺寸动画，恢复原来的大小</span></span><br><span class="line">					<span class="type">lv_anim_t</span> anim_size;</span><br><span class="line">					lv_anim_init(&amp;anim_size);</span><br><span class="line">					lv_anim_set_var(&amp;anim_size, main_btns[i]);</span><br><span class="line">					lv_anim_set_time(&amp;anim_size, <span class="number">200</span>);</span><br><span class="line">					lv_anim_set_values(&amp;anim_size, lv_obj_get_width(main_btns[i]), <span class="number">24</span>);</span><br><span class="line">					lv_anim_set_exec_cb(&amp;anim_size, (<span class="type">lv_anim_exec_xcb_t</span>)lv_obj_set_width);</span><br><span class="line">					lv_anim_start(&amp;anim_size);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="comment">// 位置动画，移动到下一个按钮的位置</span></span><br><span class="line">			<span class="type">lv_anim_t</span> anim_pos;</span><br><span class="line">			lv_anim_init(&amp;anim_pos);</span><br><span class="line">			lv_anim_set_var(&amp;anim_pos, main_btns[i]);</span><br><span class="line">			lv_anim_set_time(&amp;anim_pos, anim_time);</span><br><span class="line">			lv_anim_set_values(&amp;anim_pos, lv_obj_get_x(main_btns[i]), x);</span><br><span class="line">			lv_anim_set_exec_cb(&amp;anim_pos, (<span class="type">lv_anim_exec_xcb_t</span>)lv_obj_set_x);</span><br><span class="line">			lv_anim_start(&amp;anim_pos);</span><br><span class="line"></span><br><span class="line">			lv_anim_init(&amp;anim_pos);</span><br><span class="line">			lv_anim_set_var(&amp;anim_pos, main_btns[i]);</span><br><span class="line">			lv_anim_set_time(&amp;anim_pos, anim_time);</span><br><span class="line">			lv_anim_set_values(&amp;anim_pos, lv_obj_get_y(main_btns[i]), y);</span><br><span class="line">			lv_anim_set_exec_cb(&amp;anim_pos, (<span class="type">lv_anim_exec_xcb_t</span>)lv_obj_set_y);</span><br><span class="line">			lv_anim_start(&amp;anim_pos);</span><br><span class="line">			</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>当某个按钮被选中时就会移动到中间并放大，当确认按键被点击时，就会触发该按钮的事件回调函数。</p>
+<h3 id="摇杆开发"><a href="#摇杆开发" class="headerlink" title="摇杆开发"></a>摇杆开发</h3><p>摇杆模块由xy轴adc输出和摇杆按键构成，其中adc电压范围是0<del>5v，因此不能使用STM32直接测量，这里采用两个10K欧的电阻将adc变成0</del>2.5v。<br>判断摇杆移动逻辑：首先进行摇杆校准，读取并存储摇杆xy轴不移动时adc的值并保存。然后控制摇杆绕最大的圈，以此获得摇杆xy轴最大&#x2F;小adc的值。<br>然后将摇杆进行类似’归一化’的操作，将摇杆xy轴转换成 <code>-value~value</code> 的范围内（注意由于模块实际上x正半轴和负半轴范围不一样，因此应该采取一定的比例将正负半轴平衡）。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//摇杆校准</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">lever_init</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span>(key_ok == <span class="number">2</span>)<span class="keyword">return</span> key_ok;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span>(HAL_GPIO_ReadPin(H_key_GPIO_Port,H_key_Pin)==GPIO_PIN_RESET)</span><br><span class="line">	&#123;</span><br><span class="line">			vTaskDelay(<span class="number">20</span>);</span><br><span class="line">			<span class="keyword">if</span>(HAL_GPIO_ReadPin(H_key_GPIO_Port,H_key_Pin)==GPIO_PIN_RESET)</span><br><span class="line">				key_ok++;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	HAL_ADC_Start_DMA(&amp;hadc1,(<span class="type">uint32_t</span>*)adc_handlexy,<span class="number">2</span>);</span><br><span class="line">	<span class="keyword">if</span>(key_ok == <span class="number">0</span>)<span class="comment">//校准中间</span></span><br><span class="line">	&#123;</span><br><span class="line">		HAL_ADC_Start_DMA(&amp;hadc1,(<span class="type">uint32_t</span>*)adc_handlexy,<span class="number">2</span>);</span><br><span class="line">		midx = adc_handlexy[<span class="number">0</span>];</span><br><span class="line">		midy = adc_handlexy[<span class="number">1</span>];</span><br><span class="line">		minx = maxx = midx;</span><br><span class="line">		miny = maxy = midy;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span>(key_ok == <span class="number">1</span>)<span class="comment">//校准周围</span></span><br><span class="line">	&#123;</span><br><span class="line">		minx = adc_handlexy[<span class="number">0</span>]&gt;minx?minx:adc_handlexy[<span class="number">0</span>];</span><br><span class="line">		miny = adc_handlexy[<span class="number">1</span>]&gt;miny?miny:adc_handlexy[<span class="number">1</span>];</span><br><span class="line">		maxx = adc_handlexy[<span class="number">0</span>]&lt;maxx?maxx:adc_handlexy[<span class="number">0</span>];</span><br><span class="line">		maxy = adc_handlexy[<span class="number">1</span>]&lt;maxy?maxy:adc_handlexy[<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		uart_debug_print(<span class="string">&quot;init ok&quot;</span>,<span class="number">-1</span>);</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> key_ok;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//获取摇杆方向以及程度，将摇杆值转换成 -value~value中</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">get_dir</span><span class="params">(<span class="type">float</span>* dirt,<span class="type">int</span> value)</span></span><br><span class="line">&#123;</span><br><span class="line">	update_value();     <span class="comment">//更新摇杆的值</span></span><br><span class="line">	<span class="type">float</span> cdx = adc_handlexy[<span class="number">0</span>] - midx,cdy = adc_handlexy[<span class="number">1</span>] - midy;</span><br><span class="line">	dirt[<span class="number">0</span>] = cdx*value/(<span class="type">float</span>)(maxx-minx);</span><br><span class="line">	dirt[<span class="number">1</span>] = cdy*value/(<span class="type">float</span>)(maxy-miny);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="NRF24L01驱动移植以及通讯实现"><a href="#NRF24L01驱动移植以及通讯实现" class="headerlink" title="NRF24L01驱动移植以及通讯实现"></a>NRF24L01驱动移植以及通讯实现</h3><h3 id="接收器开发"><a href="#接收器开发" class="headerlink" title="接收器开发"></a>接收器开发</h3>
+      
+    </div>
+    <footer class="article-footer">
+      
+      
+      
+      
+      
+      
+      
+      
+
+    </footer>
+  </div>
+  
+  <nav id="article-nav" data-aos="fade-up">
+    
+    
+    <div class="article-nav-link-wrap article-nav-link-right">
+      
+        
+        
+          <img data-src="/covers/02.jpg" data-sizes="auto" alt="linux系统编程1-文件IO" class="lazyload">
+        
+      
+      <a href="/2025/03/14/linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B1-%E6%96%87%E4%BB%B6IO/"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+        
+          linux系统编程1-文件IO
+        
+      </h3>
+    </div>
+    
+  </nav>
+
+
+</article>
+
+
+
+
+
+
+</section>
+          
+            <aside id="sidebar">
+  <div class="sidebar-wrapper wrap-sticky">
+    <div class="sidebar-wrap" data-aos="fade-up">
+      
+        <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%A6%E6%98%BE%E7%A4%BA%E7%95%8C%E9%9D%A2%E7%9A%84%E6%97%A0%E7%BA%BF%E6%89%8B%E6%9F%84"><span class="toc-number">1.</span> <span class="toc-text">带显示界面的无线手柄</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E7%AE%80%E4%BB%8B"><span class="toc-number">1.1.</span> <span class="toc-text">项目简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.2.</span> <span class="toc-text">项目设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#LCD%E9%A9%B1%E5%8A%A8%E7%A7%BB%E6%A4%8D"><span class="toc-number">1.2.1.</span> <span class="toc-text">LCD驱动移植</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#freeRTOS%E7%A7%BB%E6%A4%8D"><span class="toc-number">1.2.2.</span> <span class="toc-text">freeRTOS移植</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LVGL%E7%A7%BB%E6%A4%8D"><span class="toc-number">1.2.3.</span> <span class="toc-text">LVGL移植</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LVGL-%E9%A1%B5%E9%9D%A2%E7%AE%A1%E7%90%86%E5%99%A8%E5%BC%80%E5%8F%91"><span class="toc-number">1.2.4.</span> <span class="toc-text">LVGL 页面管理器开发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LVGL-%E9%A1%B5%E9%9D%A2%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.2.5.</span> <span class="toc-text">LVGL 页面设计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%91%87%E6%9D%86%E5%BC%80%E5%8F%91"><span class="toc-number">1.2.6.</span> <span class="toc-text">摇杆开发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NRF24L01%E9%A9%B1%E5%8A%A8%E7%A7%BB%E6%A4%8D%E4%BB%A5%E5%8F%8A%E9%80%9A%E8%AE%AF%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.2.7.</span> <span class="toc-text">NRF24L01驱动移植以及通讯实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A5%E6%94%B6%E5%99%A8%E5%BC%80%E5%8F%91"><span class="toc-number">1.2.8.</span> <span class="toc-text">接收器开发</span></a></li></ol></li></ol></li></ol>
+      
+  </div>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="挺凉歙" class="lazyload">
+  <div class="sidebar-author-name">挺凉歙</div>
+  <div class="sidebar-description"></div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">14</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">0</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">0</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+      
+      
+        <div class="sidebar-btn-wrapper" style="position:static">
+          <div class="sidebar-toc-btn current"></div>
+          <div class="sidebar-common-btn"></div>
+        </div>
+      
+    </div>
+  </div>
+
+  
+</aside>
+
+          
+        </div>
+        <footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    
+    <div>
+      <span class="icon-copyright"></span>
+      2020-2025
+      <span class="footer-info-sep rotate"></span>
+      挺凉歙
+    </div>
+    
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener external nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+    
+    
+      <div>
+        <span class="icon-brush"></span>
+        17.4k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        01:09
+      </div>
+    
+    
+    
+    
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+    
+  </div>
+</footer>
+
+        
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav">
+  <div class="sidebar-wrap">
+    
+      <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%A6%E6%98%BE%E7%A4%BA%E7%95%8C%E9%9D%A2%E7%9A%84%E6%97%A0%E7%BA%BF%E6%89%8B%E6%9F%84"><span class="toc-number">1.</span> <span class="toc-text">带显示界面的无线手柄</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E7%AE%80%E4%BB%8B"><span class="toc-number">1.1.</span> <span class="toc-text">项目简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.2.</span> <span class="toc-text">项目设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#LCD%E9%A9%B1%E5%8A%A8%E7%A7%BB%E6%A4%8D"><span class="toc-number">1.2.1.</span> <span class="toc-text">LCD驱动移植</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#freeRTOS%E7%A7%BB%E6%A4%8D"><span class="toc-number">1.2.2.</span> <span class="toc-text">freeRTOS移植</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LVGL%E7%A7%BB%E6%A4%8D"><span class="toc-number">1.2.3.</span> <span class="toc-text">LVGL移植</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LVGL-%E9%A1%B5%E9%9D%A2%E7%AE%A1%E7%90%86%E5%99%A8%E5%BC%80%E5%8F%91"><span class="toc-number">1.2.4.</span> <span class="toc-text">LVGL 页面管理器开发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LVGL-%E9%A1%B5%E9%9D%A2%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.2.5.</span> <span class="toc-text">LVGL 页面设计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%91%87%E6%9D%86%E5%BC%80%E5%8F%91"><span class="toc-number">1.2.6.</span> <span class="toc-text">摇杆开发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NRF24L01%E9%A9%B1%E5%8A%A8%E7%A7%BB%E6%A4%8D%E4%BB%A5%E5%8F%8A%E9%80%9A%E8%AE%AF%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.2.7.</span> <span class="toc-text">NRF24L01驱动移植以及通讯实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A5%E6%94%B6%E5%99%A8%E5%BC%80%E5%8F%91"><span class="toc-number">1.2.8.</span> <span class="toc-text">接收器开发</span></a></li></ol></li></ol></li></ol>
+      
+  </div>
+</div>
+</div>
+      <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="挺凉歙" class="lazyload">
+  <div class="sidebar-author-name">挺凉歙</div>
+  <div class="sidebar-description"></div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">14</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">0</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">0</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+    
+  </div>
+  
+    <div class="sidebar-btn-wrapper">
+      <div class="sidebar-toc-btn current"></div>
+      <div class="sidebar-common-btn"></div>
+    </div>
+  
+</nav>
+
+    </div>
+    
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+
+
+
+
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.0.6/dist/index.umd.js" integrity="sha384-vkGvf25gm1C1PbcoD5dNfc137HzNL&#x2F;hr1RKA5HniJOaawtvUmH5lTVFgFAruE9Ge" crossorigin="anonymous"></script>
+
+  <script>
+    window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["#ff5252","#ff7c7c","#ffafaf","#ffd0d0"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["#ff0000"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'))
+  </script>
+
+
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+    
+    
+      
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+    
+    
+      <script type="module" data-pjax>
+        const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+        
+        const pswp = () => {
+          if (_$$('.article-entry a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-entry',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          if(_$$('.article-gallery a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-gallery',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          window.lightboxStatus = 'done';
+          window.removeEventListener('lightbox:ready', pswp);
+        }
+        if(window.lightboxStatus === 'ready') {
+          pswp()
+        } else {
+          window.addEventListener('lightbox:ready', pswp);
+        }
+      </script>
+      
+
+
+
+
+
+
+
+
+    
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.1.0' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+
+  </body>
+  </html>
+
