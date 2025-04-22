@@ -27,15 +27,15 @@
 
   
   
-    <meta name="description" content="相关函数   函数名 函数作用说明    文件读写相关函数    open() 打开&#x2F;创建文件   read() 读取文件   write() 写入文件   close() 关闭文件   lseek() 修改文件指针位置   文件权限与属性操作    chmod() 更改文件权限（如 chmod 755 file）   chown() 更改文件所有者和组   stat() 获取文件的详细">
+    <meta name="description" content="文件读写相关函数主要头文件为 fcntl.h 和 unistd.h。      函数名 函数作用说明    文件读写相关函数    open() 打开&#x2F;创建文件   read() 读取文件   write() 写入文件   close() 关闭文件   lseek() 修改文件指针位置   文件权限与属性操作    chmod() 更改文件权限（如 chmod 755 file）   c">
 <meta property="og:type" content="article">
 <meta property="og:title" content="linux系统编程1-文件IO">
 <meta property="og:url" content="http://tlxchen.github.io/2025/03/14/linux%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B1-%E6%96%87%E4%BB%B6IO/index.html">
 <meta property="og:site_name" content="TLX的主页">
-<meta property="og:description" content="相关函数   函数名 函数作用说明    文件读写相关函数    open() 打开&#x2F;创建文件   read() 读取文件   write() 写入文件   close() 关闭文件   lseek() 修改文件指针位置   文件权限与属性操作    chmod() 更改文件权限（如 chmod 755 file）   chown() 更改文件所有者和组   stat() 获取文件的详细">
+<meta property="og:description" content="文件读写相关函数主要头文件为 fcntl.h 和 unistd.h。      函数名 函数作用说明    文件读写相关函数    open() 打开&#x2F;创建文件   read() 读取文件   write() 写入文件   close() 关闭文件   lseek() 修改文件指针位置   文件权限与属性操作    chmod() 更改文件权限（如 chmod 755 file）   c">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-03-14T08:07:07.000Z">
-<meta property="article:modified_time" content="2025-04-22T04:38:21.143Z">
+<meta property="article:modified_time" content="2025-04-22T09:52:23.149Z">
 <meta property="article:author" content="挺凉歙">
 <meta name="twitter:card" content="summary">
   
@@ -204,7 +204,8 @@
     <div class="e-content article-entry" itemprop="articleBody">
       
       
-        <h3 id="相关函数"><a href="#相关函数" class="headerlink" title="相关函数"></a>相关函数</h3><table>
+        <h3 id="文件读写相关函数"><a href="#文件读写相关函数" class="headerlink" title="文件读写相关函数"></a>文件读写相关函数</h3><p>主要头文件为 <code>fcntl.h</code> 和 <code>unistd.h</code>。  </p>
+<table>
 <thead>
 <tr>
 <th align="left">函数名</th>
@@ -360,10 +361,8 @@
 <td>支持带偏移量的读写（线程安全）</td>
 </tr>
 </tbody></table>
-<h3 id="文件读写相关函数"><a href="#文件读写相关函数" class="headerlink" title="文件读写相关函数"></a>文件读写相关函数</h3><p>主要头文件为 <code>fcntl.h</code> 和 <code>unistd.h</code>。  </p>
 <h4 id="open-函数"><a href="#open-函数" class="headerlink" title="open() 函数"></a><code>open()</code> 函数</h4><p><strong>函数原型</strong> </p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">open</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *pathname, <span class="type">int</span> flags)</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">open</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *pathname, <span class="type">int</span> flags, <span class="type">mode_t</span> mode)</span>; <span class="comment">// 创建文件时需要指定权限</span></span><br></pre></td></tr></table></figure>
-
 <p><strong>参数说明</strong> </p>
 <ul>
 <li>pathname：文件路径，例如 “.&#x2F;test.txt”。或者直接给文件名的字符串，将在当前路径打开&#x2F;创建该文件  </li>
@@ -412,62 +411,152 @@
 </tr>
 </tbody></table>
 </li>
-<li>mode：文件权限（仅在使用 O_CREAT 时需要），如 0666，是 Linux 中的权限掩码（掩码会受 umask 影响）。</li>
+<li>mode：文件权限（仅在使用 O_CREAT 时需要），如 0666，是 Linux 中的权限掩码（掩码会受 umask 影响）。<br><strong>返回值</strong><br>成功：返回 文件描述符（非负整数），用于后续 read() &#x2F; write() &#x2F; close() 操作。<br>失败：返回 -1，并设置 errno。</li>
 </ul>
-<p><strong>返回值</strong><br>成功：返回 文件描述符（非负整数），用于后续 read() &#x2F; write() &#x2F; close() 操作。<br>失败：返回 -1，并设置 errno。  </p>
-<h4 id="read-函数"><a href="#read-函数" class="headerlink" title="read() 函数"></a><code>read()</code> 函数</h4><p><strong>函数原型</strong><br><code>ssize_t read(int fd, void *buf, size_t count);</code></p>
-<p><strong>参数分析</strong>：</p>
+<h4 id="read-函数"><a href="#read-函数" class="headerlink" title="read() 函数"></a><code>read()</code> 函数</h4><p><strong>函数原型</strong><br><code>ssize_t read(int fd, void *buf, size_t count);</code><br><strong>参数分析</strong>：</p>
 <ul>
 <li><code>fd</code>: 要读取的文件描述符。可以是通过 <code>open()</code> 打开的文件，也可以是其他 I&#x2F;O 流。</li>
 <li><code>buf</code>: 存放读取内容的缓冲区指针。</li>
-<li><code>count</code>: 要读取的字节数。</li>
-</ul>
-<p><strong>返回值分析</strong>：</p>
-<ul>
+<li><code>count</code>: 要读取的字节数。<br><strong>返回值分析</strong>：</li>
 <li>成功时，返回读取的字节数。可能小于 <code>count</code>，表示文件末尾（EOF）。</li>
 <li>失败时，返回 -1，并设置 <code>errno</code>，表明错误。</li>
 </ul>
-<h4 id="write-函数"><a href="#write-函数" class="headerlink" title="write() 函数"></a><code>write()</code> 函数</h4><p><strong>函数原型</strong><br><code>ssize_t write(int fd, const void *buf, size_t count);</code></p>
-<p><strong>参数分析</strong>：</p>
+<h4 id="write-函数"><a href="#write-函数" class="headerlink" title="write() 函数"></a><code>write()</code> 函数</h4><p><strong>函数原型</strong><br><code>ssize_t write(int fd, const void *buf, size_t count);</code><br><strong>参数分析</strong>：</p>
 <ul>
 <li><code>fd</code>: 要写入的文件描述符。</li>
 <li><code>buf</code>: 存放要写入内容的缓冲区指针。</li>
-<li><code>count</code>: 要写入的字节数。</li>
-</ul>
-<p><strong>返回值分析</strong>：</p>
-<ul>
+<li><code>count</code>: 要写入的字节数。<br><strong>返回值分析</strong>：</li>
 <li>成功时，返回写入的字节数。可能小于 <code>count</code>，如果该文件是 <code>O_APPEND</code> 打开的，写入位置可能会改变。</li>
 <li>失败时，返回 -1，并设置 <code>errno</code>，表明错误。</li>
 </ul>
-<h4 id="close-函数"><a href="#close-函数" class="headerlink" title="close() 函数"></a><code>close()</code> 函数</h4><p><strong>函数原型</strong><br><code>int close(int fd);</code></p>
-<p><strong>参数分析</strong>：</p>
+<h4 id="close-函数"><a href="#close-函数" class="headerlink" title="close() 函数"></a><code>close()</code> 函数</h4><p><strong>函数原型</strong><br><code>int close(int fd);</code><br><strong>参数分析</strong>：</p>
 <ul>
-<li><code>fd</code>: 要关闭的文件描述符。</li>
-</ul>
-<p><strong>返回值分析</strong>：</p>
-<ul>
+<li><code>fd</code>: 要关闭的文件描述符。<br><strong>返回值分析</strong>：</li>
 <li>成功时，返回 0。</li>
 <li>失败时，返回 -1，并设置 <code>errno</code>，表明错误。</li>
 </ul>
-<h4 id="lseek-函数"><a href="#lseek-函数" class="headerlink" title="lseek() 函数"></a><code>lseek()</code> 函数</h4><p><strong>函数原型</strong><br><code>off_t lseek(int fd, off_t offset, int whence);</code></p>
-<p><strong>参数分析</strong>：</p>
+<h4 id="lseek-函数"><a href="#lseek-函数" class="headerlink" title="lseek() 函数"></a><code>lseek()</code> 函数</h4><p><strong>函数原型</strong><br><code>off_t lseek(int fd, off_t offset, int whence);</code><br><strong>参数分析</strong>：</p>
 <ul>
 <li><code>fd</code>: 文件描述符，指定要操作的文件。</li>
 <li><code>offset</code>: 偏移量，表示从当前位置开始的字节数。</li>
 <li><code>whence</code>: 偏移的起始位置，可以是以下值之一：<ul>
 <li><code>SEEK_SET</code>: 从文件开头计算偏移。</li>
 <li><code>SEEK_CUR</code>: 从当前位置计算偏移。</li>
-<li><code>SEEK_END</code>: 从文件末尾计算偏移。</li>
+<li><code>SEEK_END</code>: 从文件末尾计算偏移。<br><strong>返回值分析</strong>：</li>
 </ul>
 </li>
-</ul>
-<p><strong>返回值分析</strong>：</p>
-<ul>
 <li>成功时，返回新的文件指针位置（即从文件开头的字节偏移量）。</li>
 <li>失败时，返回 -1，并设置 <code>errno</code>，表明错误。</li>
 </ul>
 <h4 id="综合示例–文件拷贝"><a href="#综合示例–文件拷贝" class="headerlink" title="综合示例–文件拷贝"></a>综合示例–文件拷贝</h4><p>执行 <code>./test [拷贝的文件地址]</code> 将拷贝该文件，并打印源文件和拷贝文件的大小</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc,<span class="type">char</span>* argv[])</span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(argc != <span class="number">2</span>)&#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;argc need file &quot;</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> fd = <span class="number">-1</span>,fd_copy = <span class="number">-1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="type">char</span>* filename = argv[<span class="number">1</span>];</span><br><span class="line">    <span class="type">char</span> filename_copy[<span class="number">20</span>];</span><br><span class="line">    <span class="built_in">sprintf</span>(filename_copy,<span class="string">&quot;%s.copy&quot;</span>,filename);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>((fd = open(filename,O_RDWR|O_CREAT,<span class="number">0666</span>)) == <span class="number">-1</span>)&#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;open or create file 2 error&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>((fd_copy = open(filename_copy,O_RDWR|O_CREAT,<span class="number">0666</span>)) == <span class="number">-1</span>)&#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;open or create file 2 error&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    lseek(fd,<span class="number">0</span>,SEEK_SET);</span><br><span class="line">    <span class="type">int</span> re = <span class="number">0</span>,copysize = <span class="number">0</span>;</span><br><span class="line">    <span class="type">char</span> readbuf[<span class="number">10</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>((re = read(fd,readbuf,<span class="number">10</span>)) &gt; <span class="number">0</span>)&#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span>(write(fd_copy,readbuf,re) != re)&#123;</span><br><span class="line">                    <span class="built_in">printf</span>(<span class="string">&quot;write error&quot;</span>);</span><br><span class="line">                    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            copysize += re;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;write content: %s\n &quot;</span>,readbuf);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//      lseek(fd,0,SEEK_SET);</span></span><br><span class="line">    <span class="type">int</span> filesize = lseek(fd,<span class="number">0</span>,SEEK_END);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;file size :%d,copy size :%d\n&quot;</span>,filesize,copysize);</span><br><span class="line">    close(fd);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc,<span class="type">char</span>* argv[])</span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(argc != <span class="number">2</span>)&#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;argc need file &quot;</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> fd = <span class="number">-1</span>,fd_copy = <span class="number">-1</span>;</span><br><span class="line">    <span class="type">char</span>* filename = argv[<span class="number">1</span>];</span><br><span class="line">    <span class="type">char</span> filename_copy[<span class="number">20</span>];</span><br><span class="line">    <span class="built_in">sprintf</span>(filename_copy,<span class="string">&quot;%s.copy&quot;</span>,filename);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>((fd = open(filename,O_RDWR|O_CREAT,<span class="number">0666</span>)) == <span class="number">-1</span>)&#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;open or create file 2 error&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>((fd_copy = open(filename_copy,O_RDWR|O_CREAT,<span class="number">0666</span>)) == <span class="number">-1</span>)&#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;open or create file 2 error&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    lseek(fd,<span class="number">0</span>,SEEK_SET);</span><br><span class="line">    <span class="type">int</span> re = <span class="number">0</span>,copysize = <span class="number">0</span>;</span><br><span class="line">    <span class="type">char</span> readbuf[<span class="number">10</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>((re = read(fd,readbuf,<span class="number">10</span>)) &gt; <span class="number">0</span>)&#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span>(write(fd_copy,readbuf,re) != re)&#123;</span><br><span class="line">                    <span class="built_in">printf</span>(<span class="string">&quot;write error&quot;</span>);</span><br><span class="line">                    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            copysize += re;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;write content: %s\n &quot;</span>,readbuf);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//      lseek(fd,0,SEEK_SET);</span></span><br><span class="line">    <span class="type">int</span> filesize = lseek(fd,<span class="number">0</span>,SEEK_END);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;file size :%d,copy size :%d\n&quot;</span>,filesize,copysize);</span><br><span class="line">    close(fd);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="进程管理相关函数"><a href="#进程管理相关函数" class="headerlink" title="进程管理相关函数"></a>进程管理相关函数</h3><table>
+<thead>
+<tr>
+<th>函数名</th>
+<th>函数作用及说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>fork()</code></td>
+<td>用于创建一个子进程。父进程和子进程的代码会同时执行。返回值：在父进程中返回子进程的 PID，在子进程中返回 0。</td>
+</tr>
+<tr>
+<td><code>exec()</code></td>
+<td>用于执行一个程序，替换当前进程的映像。常见的有 <code>execlp()</code>, <code>execvp()</code> 等变种。返回值：成功时不返回，失败时返回 -1。</td>
+</tr>
+<tr>
+<td><code>wait()</code></td>
+<td>父进程调用，等待子进程结束。返回值：子进程的 PID，或 <code>-1</code>（如果没有子进程或出错）。</td>
+</tr>
+<tr>
+<td><code>exit()</code></td>
+<td>用于终止当前进程的执行，并返回一个退出状态码。返回值：无，进程结束后，操作系统会处理退出状态码。</td>
+</tr>
+</tbody></table>
+<h4 id="fork-函数"><a href="#fork-函数" class="headerlink" title="fork() 函数"></a><code>fork()</code> 函数</h4><p><strong>函数原型</strong><br><code>pid_t fork(void);</code><br><strong>返回值分析</strong></p>
+<ul>
+<li>成功时，父进程返回子进程的 PID（大于 0），子进程返回 0。</li>
+<li>失败时，返回 -1，且 errno 被设置为错误码。<br><strong>说明</strong></li>
+<li>fork() 用于创建一个子进程。调用该函数后，父进程和子进程会从 fork() 处继续执行。父进程返回子进程的 PID，子进程返回 0。父子进程拥有各自的地址空间，文件描述符等资源的副本，但它们共享某些资源（如打开的文件描述符）。</li>
+</ul>
+<h4 id="exec-函数系列"><a href="#exec-函数系列" class="headerlink" title="exec() 函数系列"></a><strong><code>exec()</code> 函数系列</strong></h4><p><strong>函数原型</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">execl</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *path, <span class="type">const</span> <span class="type">char</span> *arg, ... <span class="comment">/* (char *) NULL */</span>)</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">execp</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *path, <span class="type">const</span> <span class="type">char</span> *arg, ... <span class="comment">/* (char *) NULL */</span>)</span>;</span><br></pre></td></tr></table></figure>
+<p><strong>参数分析</strong></p>
+<ul>
+<li>path：要执行的程序的路径。</li>
+<li>arg：传递给程序的参数列表，参数以 NULL 结尾。<br><strong>返回值分析</strong></li>
+<li>成功时，exec() 不会返回，因为调用的程序会替换当前进程的映像。</li>
+<li>失败时，返回 -1，errno 会设置为错误码。<br><strong>说明</strong></li>
+<li>exec() 函数族用于加载和执行一个新的程序，替换当前进程的映像。常见的变种包括 execlp(), execvp() 等，它们在路径查找和参数传递上有所不同。</li>
+</ul>
+<h4 id="wait-函数"><a href="#wait-函数" class="headerlink" title="wait() 函数"></a><strong><code>wait()</code> 函数</strong></h4><p><strong>函数原型</strong><br><code>pid_t wait(int *status);</code><br><strong>参数分析</strong></p>
+<ul>
+<li>status：指向整数的指针，用于接收子进程的退出状态码。<br><strong>返回值分析</strong></li>
+<li>成功时，返回已退出的子进程的 PID。</li>
+<li>失败时，返回 -1，并设置 errno。<br><strong>说明</strong></li>
+<li>wait() 函数用于父进程等待子进程终止。该函数会阻塞父进程，直到某个子进程退出或收到某些信号。status 用来存储子进程的退出状态码，父进程可以通过该值判断子进程的结束方式（正常退出或异常退出）。</li>
+</ul>
+<h4 id="exit-函数"><a href="#exit-函数" class="headerlink" title="exit() 函数"></a><strong><code>exit()</code> 函数</strong></h4><p><strong>函数原型</strong><br><code>void exit(int status);</code><br><strong>参数分析</strong></p>
+<ul>
+<li>status：进程的退出状态码，通常是整数值，表示进程的退出状态。<br><strong>返回值分析</strong></li>
+<li>无返回值，调用该函数后，进程将终止。<br><strong>说明</strong></li>
+<li>exit() 用于终止当前进程的执行。退出状态码会传递给父进程，通常用于标识进程的结束情况（如成功、失败等）。调用 exit() 后，操作系统会清理进程资源并关闭文件描述符。</li>
+</ul>
+<h4 id="综合示例"><a href="#综合示例" class="headerlink" title="综合示例"></a>综合示例</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/wait.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>* argv[])</span> &#123;</span><br><span class="line">    <span class="type">pid_t</span> pid = fork();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (pid == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;this is child process\n&quot;</span>);</span><br><span class="line">        execlp(<span class="string">&quot;ls&quot;</span>, <span class="string">&quot;ls&quot;</span>, <span class="string">&quot;-l&quot;</span>, <span class="literal">NULL</span>);</span><br><span class="line">        perror(<span class="string">&quot;execlp error&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">-1</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (pid &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;this is father process\n&quot;</span>);</span><br><span class="line">        <span class="type">int</span> status = <span class="number">0</span>;</span><br><span class="line">        wait(&amp;status);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;child process exit status: %d\n&quot;</span>, status);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        perror(<span class="string">&quot;create process error&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="信号处理-相关函数"><a href="#信号处理-相关函数" class="headerlink" title="信号处理 相关函数"></a>信号处理 相关函数</h3><p>头文件 <code>signal.h</code></p>
+<table>
+<thead>
+<tr>
+<th>函数名</th>
+<th>函数作用及说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>signal()</code></td>
+<td>设置信号的处理方式，如自定义处理函数、忽略信号或默认处理。</td>
+</tr>
+<tr>
+<td><code>kill()</code></td>
+<td>向指定进程或进程组发送信号，可用于终止进程、发送自定义信号等。</td>
+</tr>
+<tr>
+<td><code>alarm()</code></td>
+<td>设置一个定时器，若到达设定的秒数则发送 <code>SIGALRM</code> 信号给当前进程。</td>
+</tr>
+<tr>
+<td><code>pause()</code></td>
+<td>使进程挂起，直到接收到一个信号并且该信号的处理函数执行完毕。</td>
+</tr>
+</tbody></table>
+<h4 id="signal-函数"><a href="#signal-函数" class="headerlink" title="signal() 函数"></a><strong><code>signal()</code> 函数</strong></h4><p><strong>函数原型</strong><br><code>void (*signal(int signum, void (*handler)(int)))(int);</code><br><strong>参数分析</strong></p>
+<ul>
+<li>signum：要捕捉或处理的信号编号，如 SIGINT、SIGTERM 等。</li>
+<li>handler：信号处理函数的指针，也可以是 SIG_IGN（忽略信号）或 SIG_DFL（默认处理）。<br><strong>返回值分析</strong></li>
+<li>返回前一次为该信号设置的处理函数指针。如果出错，返回 SIG_ERR。</li>
+</ul>
+<h4 id="kill-函数"><a href="#kill-函数" class="headerlink" title="kill() 函数"></a><strong><code>kill()</code> 函数</strong></h4><p><strong>函数原型</strong><br><code>int kill(pid_t pid, int sig);</code><br><strong>参数分析</strong></p>
+<ul>
+<li>pid：目标进程 ID，或 0（当前进程组）、-1（所有进程）等特殊值。</li>
+<li>sig：要发送的信号编号，如 SIGINT、SIGKILL。<br><strong>返回值分析</strong></li>
+<li>成功返回 0</li>
+<li>失败返回 -1，并设置 errno。</li>
+</ul>
+<h4 id="alarm-函数"><a href="#alarm-函数" class="headerlink" title="alarm() 函数"></a><strong><code>alarm()</code> 函数</strong></h4><p><strong>函数原型</strong><br><code>unsigned int alarm(unsigned int seconds);</code><br><strong>参数分析</strong></p>
+<ul>
+<li>seconds：在多少秒后触发 SIGALRM 信号。如果设为 0，则取消之前的 alarm。<br><strong>返回值分析</strong></li>
+<li>返回之前设置的还剩多少秒的 alarm，如果没有则为 0。</li>
+</ul>
+<h4 id="pause-函数"><a href="#pause-函数" class="headerlink" title="pause() 函数"></a><strong><code>pause()</code> 函数</strong></h4><p><strong>函数原型</strong><br><code>int pause(void);</code><br><strong>参数分析</strong></p>
+<ul>
+<li>无参数。进程会挂起，直到捕捉到信号并从信号处理函数返回。<br><strong>返回值分析</strong></li>
+<li>永远返回 -1，并将 errno 设置为 EINTR（被信号中断）。</li>
+</ul>
+<h4 id="综合示例-1"><a href="#综合示例-1" class="headerlink" title="综合示例"></a>综合示例</h4><p>1、</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;signal.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">sig_handle</span><span class="params">(<span class="type">int</span> sig)</span> &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Alarm triggered!\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    signal(SIGALRM, sig_handle);</span><br><span class="line">    alarm(<span class="number">3</span>);      <span class="comment">// 设置 3 秒后触发 SIGALRM</span></span><br><span class="line">    pause();       <span class="comment">// 等待信号</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>2、</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/wait.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;signal.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> mysig = <span class="number">0</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">sighandle</span><span class="params">(<span class="type">int</span> sig)</span>&#123;</span><br><span class="line">    mysig = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> arg,<span class="type">char</span>* argv[])</span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">pid_t</span> pid = fork();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(pid == <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;this is child process\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> cnt = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        signal(SIGINT,sighandle);</span><br><span class="line">        <span class="keyword">while</span>(<span class="number">1</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(mysig)&#123;</span><br><span class="line">                mysig = <span class="number">0</span>;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">&quot;Receive Ctrl+c\n&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;running:%d\n&quot;</span>,cnt++);</span><br><span class="line">            sleep(<span class="number">1</span>);</span><br><span class="line">            <span class="keyword">if</span>(cnt == <span class="number">13</span>)<span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(pid&gt;<span class="number">0</span>)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;this is father process\n&quot;</span>);</span><br><span class="line">        signal(SIGINT, SIG_IGN);</span><br><span class="line">        sleep(<span class="number">5</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;father:send signal stop\n&quot;</span>);</span><br><span class="line">        kill(pid,SIGSTOP);</span><br><span class="line"></span><br><span class="line">        sleep(<span class="number">5</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;father:send signal continue\n&quot;</span>);</span><br><span class="line">        kill(pid,SIGCONT);</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> statue = <span class="number">0</span>;</span><br><span class="line">        wait(&amp;statue);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;child process exit statue:%d\n&quot;</span>,statue);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        perror(<span class="string">&quot;create process error\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -490,7 +579,7 @@
         
           
           
-            <img data-src="/covers/06.jpg" data-sizes="auto" alt="handle" class="lazyload">
+            <img data-src="/covers/02.jpg" data-sizes="auto" alt="handle" class="lazyload">
           
         
         <a href="/2025/04/10/handle/"></a>
@@ -507,7 +596,7 @@
       
         
         
-          <img data-src="/covers/02.jpg" data-sizes="auto" alt="Vim使用学习" class="lazyload">
+          <img data-src="/covers/03.jpg" data-sizes="auto" alt="Vim使用学习" class="lazyload">
         
       
       <a href="/2025/03/12/Vim%E4%BD%BF%E7%94%A8%E5%AD%A6%E4%B9%A0/"></a>
@@ -539,7 +628,7 @@
   <h3 class="toc-title">文章目录</h3>
   <div class="sidebar-toc-wrapper toc-div-class" >
       
-        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E5%87%BD%E6%95%B0"><span class="toc-number">1.</span> <span class="toc-text">相关函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99%E7%9B%B8%E5%85%B3%E5%87%BD%E6%95%B0"><span class="toc-number">2.</span> <span class="toc-text">文件读写相关函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#open-%E5%87%BD%E6%95%B0"><span class="toc-number">2.1.</span> <span class="toc-text">open() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#read-%E5%87%BD%E6%95%B0"><span class="toc-number">2.2.</span> <span class="toc-text">read() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#write-%E5%87%BD%E6%95%B0"><span class="toc-number">2.3.</span> <span class="toc-text">write() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#close-%E5%87%BD%E6%95%B0"><span class="toc-number">2.4.</span> <span class="toc-text">close() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#lseek-%E5%87%BD%E6%95%B0"><span class="toc-number">2.5.</span> <span class="toc-text">lseek() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%BC%E5%90%88%E7%A4%BA%E4%BE%8B%E2%80%93%E6%96%87%E4%BB%B6%E6%8B%B7%E8%B4%9D"><span class="toc-number">2.6.</span> <span class="toc-text">综合示例–文件拷贝</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99%E7%9B%B8%E5%85%B3%E5%87%BD%E6%95%B0"><span class="toc-number">1.</span> <span class="toc-text">文件读写相关函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#open-%E5%87%BD%E6%95%B0"><span class="toc-number">1.1.</span> <span class="toc-text">open() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#read-%E5%87%BD%E6%95%B0"><span class="toc-number">1.2.</span> <span class="toc-text">read() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#write-%E5%87%BD%E6%95%B0"><span class="toc-number">1.3.</span> <span class="toc-text">write() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#close-%E5%87%BD%E6%95%B0"><span class="toc-number">1.4.</span> <span class="toc-text">close() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#lseek-%E5%87%BD%E6%95%B0"><span class="toc-number">1.5.</span> <span class="toc-text">lseek() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%BC%E5%90%88%E7%A4%BA%E4%BE%8B%E2%80%93%E6%96%87%E4%BB%B6%E6%8B%B7%E8%B4%9D"><span class="toc-number">1.6.</span> <span class="toc-text">综合示例–文件拷贝</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E7%9B%B8%E5%85%B3%E5%87%BD%E6%95%B0"><span class="toc-number">2.</span> <span class="toc-text">进程管理相关函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#fork-%E5%87%BD%E6%95%B0"><span class="toc-number">2.1.</span> <span class="toc-text">fork() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#exec-%E5%87%BD%E6%95%B0%E7%B3%BB%E5%88%97"><span class="toc-number">2.2.</span> <span class="toc-text">exec() 函数系列</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#wait-%E5%87%BD%E6%95%B0"><span class="toc-number">2.3.</span> <span class="toc-text">wait() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#exit-%E5%87%BD%E6%95%B0"><span class="toc-number">2.4.</span> <span class="toc-text">exit() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%BC%E5%90%88%E7%A4%BA%E4%BE%8B"><span class="toc-number">2.5.</span> <span class="toc-text">综合示例</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86-%E7%9B%B8%E5%85%B3%E5%87%BD%E6%95%B0"><span class="toc-number">3.</span> <span class="toc-text">信号处理 相关函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#signal-%E5%87%BD%E6%95%B0"><span class="toc-number">3.1.</span> <span class="toc-text">signal() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kill-%E5%87%BD%E6%95%B0"><span class="toc-number">3.2.</span> <span class="toc-text">kill() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#alarm-%E5%87%BD%E6%95%B0"><span class="toc-number">3.3.</span> <span class="toc-text">alarm() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pause-%E5%87%BD%E6%95%B0"><span class="toc-number">3.4.</span> <span class="toc-text">pause() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%BC%E5%90%88%E7%A4%BA%E4%BE%8B-1"><span class="toc-number">3.5.</span> <span class="toc-text">综合示例</span></a></li></ol></li></ol>
       
   </div>
 </div>
@@ -640,10 +729,10 @@
     
       <div>
         <span class="icon-brush"></span>
-        17.4k
+        19k
         &nbsp;|&nbsp;
         <span class="icon-coffee"></span>
-        01:09
+        01:15
       </div>
     
     
@@ -675,7 +764,7 @@
   <h3 class="toc-title">文章目录</h3>
   <div class="sidebar-toc-wrapper toc-div-class" >
       
-        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E5%87%BD%E6%95%B0"><span class="toc-number">1.</span> <span class="toc-text">相关函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99%E7%9B%B8%E5%85%B3%E5%87%BD%E6%95%B0"><span class="toc-number">2.</span> <span class="toc-text">文件读写相关函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#open-%E5%87%BD%E6%95%B0"><span class="toc-number">2.1.</span> <span class="toc-text">open() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#read-%E5%87%BD%E6%95%B0"><span class="toc-number">2.2.</span> <span class="toc-text">read() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#write-%E5%87%BD%E6%95%B0"><span class="toc-number">2.3.</span> <span class="toc-text">write() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#close-%E5%87%BD%E6%95%B0"><span class="toc-number">2.4.</span> <span class="toc-text">close() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#lseek-%E5%87%BD%E6%95%B0"><span class="toc-number">2.5.</span> <span class="toc-text">lseek() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%BC%E5%90%88%E7%A4%BA%E4%BE%8B%E2%80%93%E6%96%87%E4%BB%B6%E6%8B%B7%E8%B4%9D"><span class="toc-number">2.6.</span> <span class="toc-text">综合示例–文件拷贝</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99%E7%9B%B8%E5%85%B3%E5%87%BD%E6%95%B0"><span class="toc-number">1.</span> <span class="toc-text">文件读写相关函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#open-%E5%87%BD%E6%95%B0"><span class="toc-number">1.1.</span> <span class="toc-text">open() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#read-%E5%87%BD%E6%95%B0"><span class="toc-number">1.2.</span> <span class="toc-text">read() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#write-%E5%87%BD%E6%95%B0"><span class="toc-number">1.3.</span> <span class="toc-text">write() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#close-%E5%87%BD%E6%95%B0"><span class="toc-number">1.4.</span> <span class="toc-text">close() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#lseek-%E5%87%BD%E6%95%B0"><span class="toc-number">1.5.</span> <span class="toc-text">lseek() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%BC%E5%90%88%E7%A4%BA%E4%BE%8B%E2%80%93%E6%96%87%E4%BB%B6%E6%8B%B7%E8%B4%9D"><span class="toc-number">1.6.</span> <span class="toc-text">综合示例–文件拷贝</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E7%9B%B8%E5%85%B3%E5%87%BD%E6%95%B0"><span class="toc-number">2.</span> <span class="toc-text">进程管理相关函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#fork-%E5%87%BD%E6%95%B0"><span class="toc-number">2.1.</span> <span class="toc-text">fork() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#exec-%E5%87%BD%E6%95%B0%E7%B3%BB%E5%88%97"><span class="toc-number">2.2.</span> <span class="toc-text">exec() 函数系列</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#wait-%E5%87%BD%E6%95%B0"><span class="toc-number">2.3.</span> <span class="toc-text">wait() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#exit-%E5%87%BD%E6%95%B0"><span class="toc-number">2.4.</span> <span class="toc-text">exit() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%BC%E5%90%88%E7%A4%BA%E4%BE%8B"><span class="toc-number">2.5.</span> <span class="toc-text">综合示例</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86-%E7%9B%B8%E5%85%B3%E5%87%BD%E6%95%B0"><span class="toc-number">3.</span> <span class="toc-text">信号处理 相关函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#signal-%E5%87%BD%E6%95%B0"><span class="toc-number">3.1.</span> <span class="toc-text">signal() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kill-%E5%87%BD%E6%95%B0"><span class="toc-number">3.2.</span> <span class="toc-text">kill() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#alarm-%E5%87%BD%E6%95%B0"><span class="toc-number">3.3.</span> <span class="toc-text">alarm() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pause-%E5%87%BD%E6%95%B0"><span class="toc-number">3.4.</span> <span class="toc-text">pause() 函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%BC%E5%90%88%E7%A4%BA%E4%BE%8B-1"><span class="toc-number">3.5.</span> <span class="toc-text">综合示例</span></a></li></ol></li></ol>
       
   </div>
 </div>
