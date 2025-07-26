@@ -12,7 +12,7 @@
   <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.code_block = {"expand":true};</script>
   
   <title>
-    linux驱动学习相关笔记 |
+    IP层相关协议 |
     
     TLX的主页
   </title>
@@ -27,17 +27,26 @@
 
   
   
-    <meta name="description" content="寄存器按位操作  GPECON &amp;&#x3D; ~(3 &lt;&lt; 24); &#x2F;&#x2F;011 将24和25位清零GPECON |&#x3D; (1 &lt;&lt; 24);  &#x2F;&#x2F;001 将24和25位分别赋值为1、0">
+    <meta name="description" content="IP1、IP是TCP&#x2F;IP协议族中最核心的协议。基本上很多协议（TCP&#x2F;UDP&#x2F;ICMP&#x2F;IGMP）的数据都依靠IP数据报格式传输。IP包在网络中传输过程中源IP和目的IP始终不变（如果使用源路由选项则要变），但是MAC层的地址会变。IP是不可靠、无连接的数据传输服务。    不可靠，即不能保证IP数据报能成功到达目的地，IP只提供最好的传输服务（尽力而为）">
 <meta property="og:type" content="article">
-<meta property="og:title" content="linux驱动学习相关笔记">
-<meta property="og:url" content="http://tlxchen.github.io/2024/11/28/linux-md/index.html">
+<meta property="og:title" content="IP层相关协议">
+<meta property="og:url" content="http://tlxchen.github.io/2025/07/26/IP%E5%B1%82%E7%9B%B8%E5%85%B3%E5%8D%8F%E8%AE%AE/index.html">
 <meta property="og:site_name" content="TLX的主页">
-<meta property="og:description" content="寄存器按位操作  GPECON &amp;&#x3D; ~(3 &lt;&lt; 24); &#x2F;&#x2F;011 将24和25位清零GPECON |&#x3D; (1 &lt;&lt; 24);  &#x2F;&#x2F;001 将24和25位分别赋值为1、0">
+<meta property="og:description" content="IP1、IP是TCP&#x2F;IP协议族中最核心的协议。基本上很多协议（TCP&#x2F;UDP&#x2F;ICMP&#x2F;IGMP）的数据都依靠IP数据报格式传输。IP包在网络中传输过程中源IP和目的IP始终不变（如果使用源路由选项则要变），但是MAC层的地址会变。IP是不可靠、无连接的数据传输服务。    不可靠，即不能保证IP数据报能成功到达目的地，IP只提供最好的传输服务（尽力而为）">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-11-28T12:34:05.000Z">
-<meta property="article:modified_time" content="2024-11-29T01:49:21.506Z">
+<meta property="og:image" content="http://tlxchen.github.io/2025/07/26/IP%E5%B1%82%E7%9B%B8%E5%85%B3%E5%8D%8F%E8%AE%AE/IP%E6%95%B0%E6%8D%AE%E6%8A%A5%E6%A0%BC%E5%BC%8F.png">
+<meta property="og:image" content="http://tlxchen.github.io/2025/07/26/IP%E5%B1%82%E7%9B%B8%E5%85%B3%E5%8D%8F%E8%AE%AE/IP%E6%BA%90%E7%AB%99%E8%B7%AF%E7%94%B1.png">
+<meta property="og:image" content="http://tlxchen.github.io/2025/07/26/IP%E5%B1%82%E7%9B%B8%E5%85%B3%E5%8D%8F%E8%AE%AE/ARP%E6%95%B0%E6%8D%AE%E6%8A%A5%E6%A0%BC%E5%BC%8F.png">
+<meta property="og:image" content="http://tlxchen.github.io/2025/07/26/IP%E5%B1%82%E7%9B%B8%E5%85%B3%E5%8D%8F%E8%AE%AE/ARP%E4%BB%A3%E7%90%86%E7%9A%84%E9%97%AE%E9%A2%98.png">
+<meta property="og:image" content="http://tlxchen.github.io/2025/07/26/IP%E5%B1%82%E7%9B%B8%E5%85%B3%E5%8D%8F%E8%AE%AE/ICMP%E6%8A%A5%E6%96%87%E6%A0%BC%E5%BC%8F.png">
+<meta property="og:image" content="http://tlxchen.github.io/2025/07/26/IP%E5%B1%82%E7%9B%B8%E5%85%B3%E5%8D%8F%E8%AE%AE/ICMP%E7%B1%BB%E5%9E%8B.png">
+<meta property="og:image" content="http://tlxchen.github.io/2025/07/26/IP%E5%B1%82%E7%9B%B8%E5%85%B3%E5%8D%8F%E8%AE%AE/Ping%E7%9A%84ICMP.png">
+<meta property="og:image" content="http://tlxchen.github.io/2025/07/26/IP%E5%B1%82%E7%9B%B8%E5%85%B3%E5%8D%8F%E8%AE%AE/ICMP%E9%87%8D%E5%AE%9A%E5%90%91%E5%B7%AE%E9%94%99.png">
+<meta property="article:published_time" content="2025-07-26T09:14:09.000Z">
+<meta property="article:modified_time" content="2025-07-26T09:15:03.324Z">
 <meta property="article:author" content="挺凉歙">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://tlxchen.github.io/2025/07/26/IP%E5%B1%82%E7%9B%B8%E5%85%B3%E5%8D%8F%E8%AE%AE/IP%E6%95%B0%E6%8D%AE%E6%8A%A5%E6%A0%BC%E5%BC%8F.png">
   
   
     <link rel="alternate" href="/atom.xml" title="TLX的主页" type="application/atom+xml">
@@ -160,7 +169,7 @@
 <header id="header">
   
     
-      <img fetchpriority="high" src="/images/banner.webp" alt="linux驱动学习相关笔记">
+      <img fetchpriority="high" src="/images/banner.webp" alt="IP层相关协议">
     
   
   <div id="header-outer">
@@ -169,7 +178,7 @@
         
         
           <a href="/" id="logo">
-            <h1 data-aos="slide-up">linux驱动学习相关笔记</h1>
+            <h1 data-aos="slide-up">IP层相关协议</h1>
           </a>
         
       
@@ -185,13 +194,13 @@
 
         <div id="content">
           
-          <section id="main"><article id="post-linux-md" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+          <section id="main"><article id="post-IP层相关协议" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-inner" data-aos="fade-up">
     <div class="article-meta">
       <div class="article-date">
-  <a href="/2024/11/28/linux-md/" class="article-date-link" data-aos="zoom-in">
-    <time datetime="2024-11-28T12:34:05.000Z" itemprop="datePublished">2024-11-28</time>
-    <time style="display: none;" id="post-update-time">2024-11-29</time>
+  <a href="/2025/07/26/IP%E5%B1%82%E7%9B%B8%E5%85%B3%E5%8D%8F%E8%AE%AE/" class="article-date-link" data-aos="zoom-in">
+    <time datetime="2025-07-26T09:14:09.000Z" itemprop="datePublished">2025-07-26</time>
+    <time style="display: none;" id="post-update-time">2025-07-26</time>
   </a>
 </div>
 
@@ -204,12 +213,65 @@
     <div class="e-content article-entry" itemprop="articleBody">
       
       
-        <h1 id="寄存器按位操作"><a href="#寄存器按位操作" class="headerlink" title="寄存器按位操作"></a>寄存器按位操作</h1><ul>
-<li><blockquote>
-<p>GPECON &amp;&#x3D; ~(3 &lt;&lt; 24); &#x2F;&#x2F;011 将24和25位清零<br>GPECON |&#x3D; (1 &lt;&lt; 24);  &#x2F;&#x2F;001 将24和25位分别赋值为1、0</p>
-</blockquote>
+        <h3 id="IP"><a href="#IP" class="headerlink" title="IP"></a>IP</h3><p>1、IP是TCP&#x2F;IP协议族中最核心的协议。基本上很多协议（TCP&#x2F;UDP&#x2F;ICMP&#x2F;IGMP）的数据都依靠IP数据报格式传输。IP包在网络中传输过程中源IP和目的IP始终不变（如果使用源路由选项则要变），但是MAC层的地址会变。<br>IP是不可靠、无连接的数据传输服务。  </p>
+<ul>
+<li>不可靠，即不能保证IP数据报能成功到达目的地，IP只提供最好的传输服务（尽力而为），<br>当IP数据包传输错误时，会有一个简单的错误处理算法–ICMP发送回来。</li>
+<li>无连接，IP每个数据报的处理都是独立的，IP数据报的发送数据也可以是无序的。</li>
+</ul>
+<p>2、IP数据报格式如下<br><img src="IP%E6%95%B0%E6%8D%AE%E6%8A%A5%E6%A0%BC%E5%BC%8F.png" alt="IP数据报格式"><br>从中选取个别字段记录:</p>
+<ul>
+<li>版本，一般就是IPV4和IPV6</li>
+<li>首部长度，最大就是15*4&#x3D;60字节。由于IP首部固定20字节，因此后面留给选项和选项对应数据的最多40字（介绍选项）。  </li>
+<li>服务类型（TOS），用于质量服务（QOS）,前3bit是优先权字段，后面4bit分别是最小延迟、最大吞吐量、最高可靠性、最小费用，最后一bit必须为0(无意义）  </li>
+<li>总长度，2^16&#x3D;65535字节。</li>
+<li>标识，用于ip包的id标识，每发一个包id自动++，被分片后的id不变，方便接收端把同一个id的分片包组合起来。</li>
+<li>标识。<br>  第一个是DF位：决定要不要分片；如果是1，那么就告诉路由器不要分片，直接丢包，并返回应该ICMP报文告诉我是哪台路由器丢的包。<br>  第二位是MF位：（more frame）是用来判断后面还有没有分片；1-说明该包后面还有分片包，0-当前包已经是最后一个分片包。  </li>
+<li>偏移量，标记分片的数据位置</li>
+<li>生存时间(TTL)，每经过一个路由器就–，减到0就说明不可达（主要用于traceroute，通过发送TTL递增的探测包，逐跳发现路径上的路由器。）</li>
+<li>协议，上一层用的什么协议。（1-ICMP;6-TCP;17-UDP）</li>
+<li>首部校验和，用于校验首部数据有没有被破坏。  </li>
+<li>选项。拓展选项<br>  记录几个选项<br>  记录路径<br>  时间戳<br>  宽松的源站路由<br>  严格的源站路由</li>
+<li>数据部分。一般不能成功MTU，超过的IP包需要分片。</li>
+</ul>
+<p>3、特殊IP</p>
+<ul>
+<li>0.0.0.0 没有IP向DHCP服务器申请IP的请求包中的原地址介绍全0</li>
+<li>广播地址（略</li>
+<li>环回地址（略</li>
+</ul>
+<p>4、IP源站选路的操作机制<br>严格源站路由：目的IP地址必须直连；宽松的源站路由则不用。<br>数据报根据指定的IP传输列表进行传递（需要提前知道网络的拓扑结构）<img src="IP%E6%BA%90%E7%AB%99%E8%B7%AF%E7%94%B1.png" alt="IP源站路由">  </p>
+<h3 id="ARP"><a href="#ARP" class="headerlink" title="ARP"></a>ARP</h3><p>1、ARP时位IP地址到硬件地址之间提供动态映射 </p>
+<p>2、ARP工作原理</p>
+<ul>
+<li><p>ARP请求（广播）<br>  当主机A需要与主机B通信（已知B的IP，但未知其MAC）时，<br>  会先检查ARP缓存主机A先查询本地ARP表，若没有B的MAC记录，则广播发起ARP请求包：|发送方IP-A的IP|发送方MAC-A的MAC|目标IP-B的IP|目标MAC-00:00:00:00:00:00|<br>  局域网内所有主机接收该包，但只有IP匹配的主机B会响应。</p>
+</li>
+<li><p>ARP响应（单播）<br>  主机B收到ARP请求后,会记录A的IP和MAC到本地ARP表（更新ARP缓存表），然后单播回复ARP响应包给A：|发送方IP-B的IP|发送方MAC-B的IP的MAC|目标IP-A的IP|目标MAC-A的MAC|<br>  主机A收到响应后，更新ARP表，完成通信准备。</p>
 </li>
 </ul>
+<p>3、ARP报文格式<img src="ARP%E6%95%B0%E6%8D%AE%E6%8A%A5%E6%A0%BC%E5%BC%8F.png" alt="ARP报文格式"><br>从中选取个别字段记录：</p>
+<ul>
+<li>帧类型：0806 ARP （0806-IP)</li>
+<li>硬件类型,以太网</li>
+<li>协议类型，IP</li>
+<li>硬件地址长度，对于以太网：6</li>
+<li>协议地址长度，对于IP：4</li>
+<li>op操纵符，2bit共4种操作类型，分别是：ARP请求、ARP应答、RARP请求、RARP应答。</li>
+<li>目的地以太网地址，发送arp请求时一般是全0，ARP应答时目的主机把自己的MAC地址塞进去再发送。</li>
+</ul>
+<p>4、ARP代理<br>大致流程：<br>主机A（IP: 192.168.1.10）—–（接口1: 192.168.1.1）路由器（接口2: 192.168.2.1）—–主机B（IP: 192.168.2.20）<br>A未配置默认网关。路由器启用ARP代理。<br>当主机A发送ARP请求（广播）后；路由器拦截请求，发现目标IP 192.168.2.20 属于其另一接口的子网。于是代理响应：以自身接口1的MAC地址回复主机A，假装是192.168.2.20的MAC。<br>然后主机A收到响应，将192.168.2.20的MAC记录为路由器的接口1 MAC（Router-MAC-1）。因此后续发往B的流量实际发给路由器，由路由器转发到B。</p>
+<p>一个问题：<br><img src="ARP%E4%BB%A3%E7%90%86%E7%9A%84%E9%97%AE%E9%A2%98.png" alt="ARP的一个问题"></p>
+<p>5、免费ARP<br>免费ARP是主机主动广播自己的IP和MAC映射，不请求任何信息，而是用于声明或检测。<br>发生场景</p>
+<ul>
+<li>当一台主机配置或获取到一个IP地址（如DHCP分配）时，会发送免费ARP请求，以检查局域网内是否有其他设备已经使用了该IP。如果收到响应：说明IP冲突，主机可能拒绝使用该IP</li>
+<li>当主机的MAC地址发生变化（如更换网卡、虚拟机迁移）时，发送免费ARP，通知局域网内其他设备更新ARP缓存，避免因旧MAC导致通信失败。</li>
+</ul>
+<p>问题：容易被攻击</p>
+<h3 id="ICMP"><a href="#ICMP" class="headerlink" title="ICMP"></a>ICMP</h3><p>1、简介<br>ICMP通常用于传递差错报文以及其它需要注意的信息，通常被IP层或者TCP&#x2F;UDP使用，一些ICMP报文把差错报文返回给用户进程。ICMP报文是在IP数据报内部进行传输的。    </p>
+<p>2、报文格式<br><img src="ICMP%E6%8A%A5%E6%96%87%E6%A0%BC%E5%BC%8F.png" alt="ICMP报文格式"></p>
+<ul>
+<li>类型和代码，用于描述特定类型的ICMP报文，结合代码字段进一步描述不同条件。<br><img src="ICMP%E7%B1%BB%E5%9E%8B.png" alt="ICMP报文类型"><br>ICMP报文分为查询报文和差错报文。当发送语法ICMP差错报文是，报文会始终包含IP首部和产生ICMP差错报文的IP数据报前8个字节（根据端口号将差错报文发送给原来的程序）<br>对于差错报文，为防止差错报文对广播分组响应，带来广播风暴有以下几种情况不会产生差错报文：ICMP差错报文；目的地址是广播&#x2F;多播地址；作为数据链路层广播的数据报；<br>不是IP分片的第一片（只有第一片才有端口号等信息）；源地址不是单个主机的数据报，即零地址、环回地址、广播&#x2F;多播地址。</li>
+</ul>
+<p>3、使用 ICMP 的ping程序<br><img src="Ping%E7%9A%84ICMP.png" alt="Ping命令的ICM报文结构"><br>ping -R 记录路由选项。使用了IP结构种的记录路由选项，但是由于IP首部除去固定20字节后只剩下40字节，因此也记录不了啥路由，感觉有点鸡肋。<br>IP时间戳选项，和记录路由选项类似。<br>记录IP包传输经过的路由有一个程序叫Tracerote（unix），是利用TTL来记录路由的。（疑问：利用TTL会发多次包，它怎么确保每个包都走一条路径？）<br>具体流程：Traceroute程序会发送UDP数据报给目的主机。设置目的端口号&gt;33434（用于区分是否到达目的主机），发送第一个探测包（TTL&#x3D;1),到第一个路由器后TTL减到0，路由器丢弃包并返回ICMP超时，<br>发送第二个探测包（TTL&#x3D;2），到第二个路由器时返回ICMP超时，重复此过程直到到达目的主机，由于端口号太大，会找不到该端口号，返回ICMP端口不可达。（不同操作系统记录路由实现不一样，但原理类似）。<br>4、ICMP重定向差错。<br><img src="ICMP%E9%87%8D%E5%AE%9A%E5%90%91%E5%B7%AE%E9%94%99.png" alt="ICMP重定向差错"></p>
 
       
     </div>
@@ -228,35 +290,19 @@
   
   <nav id="article-nav" data-aos="fade-up">
     
-      <div class="article-nav-link-wrap article-nav-link-left">
-        
-          
-          
-            <img data-src="/covers/04.jpg" data-sizes="auto" alt="树莓派4B-GPIO驱动" class="lazyload">
-          
-        
-        <a href="/2024/12/08/gpio-md/"></a>
-        <div class="article-nav-caption">前一篇</div>
-        <h3 class="article-nav-title">
-          
-            树莓派4B-GPIO驱动
-          
-        </h3>
-      </div>
-    
     
     <div class="article-nav-link-wrap article-nav-link-right">
       
         
         
-          <img data-src="/covers/06.jpg" data-sizes="auto" alt="基于树莓派4B本地驱动编译的环境搭建" class="lazyload">
+          <img data-src="/covers/04.jpg" data-sizes="auto" alt="handle" class="lazyload">
         
       
-      <a href="/2024/11/27/rpi-kernel/"></a>
+      <a href="/2025/04/10/handle/"></a>
       <div class="article-nav-caption">后一篇</div>
       <h3 class="article-nav-title">
         
-          基于树莓派4B本地驱动编译的环境搭建
+          handle
         
       </h3>
     </div>
@@ -281,7 +327,7 @@
   <h3 class="toc-title">文章目录</h3>
   <div class="sidebar-toc-wrapper toc-div-class" >
       
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AF%84%E5%AD%98%E5%99%A8%E6%8C%89%E4%BD%8D%E6%93%8D%E4%BD%9C"><span class="toc-number">1.</span> <span class="toc-text">寄存器按位操作</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#IP"><span class="toc-number">1.</span> <span class="toc-text">IP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ARP"><span class="toc-number">2.</span> <span class="toc-text">ARP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ICMP"><span class="toc-number">3.</span> <span class="toc-text">ICMP</span></a></li></ol>
       
   </div>
 </div>
@@ -417,7 +463,7 @@
   <h3 class="toc-title">文章目录</h3>
   <div class="sidebar-toc-wrapper toc-div-class" >
       
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AF%84%E5%AD%98%E5%99%A8%E6%8C%89%E4%BD%8D%E6%93%8D%E4%BD%9C"><span class="toc-number">1.</span> <span class="toc-text">寄存器按位操作</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#IP"><span class="toc-number">1.</span> <span class="toc-text">IP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ARP"><span class="toc-number">2.</span> <span class="toc-text">ARP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ICMP"><span class="toc-number">3.</span> <span class="toc-text">ICMP</span></a></li></ol>
       
   </div>
 </div>
