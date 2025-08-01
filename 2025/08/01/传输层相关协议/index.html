@@ -1,0 +1,729 @@
+
+  <!DOCTYPE html>
+  <html lang="zh-CN"  >
+  <head>
+  <meta charset="utf-8">
+  
+
+  
+
+  
+
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.code_block = {"expand":true};</script>
+  
+  <title>
+    传输层相关协议 |
+    
+    TLX的主页
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic&display=swap" media="print" onload="this.media&#x3D;&#39;all&#39;">
+  
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_tq6stt6tcg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  
+  
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+  
+  
+    <meta name="description" content="UDP1、介绍UDP是一个简单的面向数据报的协议：进程的每个输出操作都刚好产生一个UDP数据报，并被组装成一份待发送的IP数据报。 在此同时也解析一下TCP的面向数据流： 应用程序产生的全体数据和真实发生的单个IP数据报之间可能没有什么联系，即一个应用程序数据包有可能被分成多个IP数据报或者和另外一个应用程序数据报的一部分组装成一个IP数据报一起发送（大了会被拆，小了就充组装）因为这个原因，TCP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="传输层相关协议">
+<meta property="og:url" content="http://tlxchen.github.io/2025/08/01/%E4%BC%A0%E8%BE%93%E5%B1%82%E7%9B%B8%E5%85%B3%E5%8D%8F%E8%AE%AE/index.html">
+<meta property="og:site_name" content="TLX的主页">
+<meta property="og:description" content="UDP1、介绍UDP是一个简单的面向数据报的协议：进程的每个输出操作都刚好产生一个UDP数据报，并被组装成一份待发送的IP数据报。 在此同时也解析一下TCP的面向数据流： 应用程序产生的全体数据和真实发生的单个IP数据报之间可能没有什么联系，即一个应用程序数据包有可能被分成多个IP数据报或者和另外一个应用程序数据报的一部分组装成一个IP数据报一起发送（大了会被拆，小了就充组装）因为这个原因，TCP">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://tlxchen.github.io/2025/08/01/%E4%BC%A0%E8%BE%93%E5%B1%82%E7%9B%B8%E5%85%B3%E5%8D%8F%E8%AE%AE/UDP%E9%A6%96%E9%83%A8%E7%BB%93%E6%9E%84.png">
+<meta property="og:image" content="http://tlxchen.github.io/2025/08/01/%E4%BC%A0%E8%BE%93%E5%B1%82%E7%9B%B8%E5%85%B3%E5%8D%8F%E8%AE%AE/DNS%E6%A0%91%E5%BD%A2%E7%BB%93%E6%9E%84.png">
+<meta property="og:image" content="http://tlxchen.github.io/2025/08/01/%E4%BC%A0%E8%BE%93%E5%B1%82%E7%9B%B8%E5%85%B3%E5%8D%8F%E8%AE%AE/DNS%E6%8A%A5%E6%96%87%E6%A0%BC%E5%BC%8F.png">
+<meta property="og:image" content="http://tlxchen.github.io/2025/08/01/%E4%BC%A0%E8%BE%93%E5%B1%82%E7%9B%B8%E5%85%B3%E5%8D%8F%E8%AE%AE/TFTP%E6%8A%A5%E6%96%87%E6%A0%BC%E5%BC%8F.png">
+<meta property="og:image" content="http://tlxchen.github.io/2025/08/01/%E4%BC%A0%E8%BE%93%E5%B1%82%E7%9B%B8%E5%85%B3%E5%8D%8F%E8%AE%AE/TCP%E6%8A%A5%E6%96%87%E6%A0%BC%E5%BC%8F.c">
+<meta property="article:published_time" content="2025-08-01T13:36:26.000Z">
+<meta property="article:modified_time" content="2025-08-01T13:36:52.069Z">
+<meta property="article:author" content="挺凉歙">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://tlxchen.github.io/2025/08/01/%E4%BC%A0%E8%BE%93%E5%B1%82%E7%9B%B8%E5%85%B3%E5%8D%8F%E8%AE%AE/UDP%E9%A6%96%E9%83%A8%E7%BB%93%E6%9E%84.png">
+  
+  
+    <link rel="alternate" href="/atom.xml" title="TLX的主页" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+  
+  
+  
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+  
+  
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.0/dist/aos.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    
+  <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi">
+        
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+        
+      </div>
+      <div class="loading-word">少女祈祷中...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script>
+
+<div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav">
+    
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/">首页</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/archives">归档</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/about">关于</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/friend">友链</a>
+        </span>
+      
+    
+    <a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav">
+    
+      <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅" target="_blank"></a>
+    
+    
+    
+  </nav>
+</div>
+<header id="header">
+  
+    
+      <img fetchpriority="high" src="/images/banner.webp" alt="传输层相关协议">
+    
+  
+  <div id="header-outer">
+    <div id="header-title">
+      
+        
+        
+          <a href="/" id="logo">
+            <h1 data-aos="slide-up">传输层相关协议</h1>
+          </a>
+        
+      
+      
+        
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+          
+        </h2>
+      
+    </div>
+  </div>
+</header>
+
+        <div id="content">
+          
+          <section id="main"><article id="post-传输层相关协议" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <a href="/2025/08/01/%E4%BC%A0%E8%BE%93%E5%B1%82%E7%9B%B8%E5%85%B3%E5%8D%8F%E8%AE%AE/" class="article-date-link" data-aos="zoom-in">
+    <time datetime="2025-08-01T13:36:26.000Z" itemprop="datePublished">2025-08-01</time>
+    <time style="display: none;" id="post-update-time">2025-08-01</time>
+  </a>
+</div>
+
+      
+
+    </div>
+    <div class="hr-line"></div>
+    
+
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+      
+        <h3 id="UDP"><a href="#UDP" class="headerlink" title="UDP"></a>UDP</h3><p>1、介绍<br>UDP是一个简单的面向数据报的协议：进程的每个输出操作都刚好产生一个UDP数据报，并被组装成一份待发送的IP数据报。 在此同时也解析一下TCP的面向数据流： 应用程序产生的全体数据和真实发生的单个IP数据报<br>之间可能没有什么联系，即一个应用程序数据包有可能被分成多个IP数据报或者和另外一个应用程序数据报的一部分组装成一个IP数据报一起发送（大了会被拆，小了就充组装）因为这个原因，TCP就会出现粘包的现象。<br>由于这个UDP的数据报可能非常长，以至于超过了网络的MTU，因此就会涉及到IP分片（可以说IP分片主要就是为UDP服务的）。<br>UDP 是不可靠的协议，只负责将数据报发送出去，并不保证数据能够到达目的地。<br><img src="UDP%E9%A6%96%E9%83%A8%E7%BB%93%E6%9E%84.png" alt="UDP首部结构">  </p>
+<ul>
+<li>端口号表示发送的进程和结束的进程。</li>
+<li>TCP和UDP的端口号是相互独立的。</li>
+<li>UDP长度，首部+数据的长度。  </li>
+<li>UDP校验和，通过对UDP首部，数据部分，伪首部（包括源目IP地址、协议、长度等一些字段，目的是为了让UDP两次检查数据是否已经正确到达目的地）一起状一个校验和得到的值。<br>UDP的最大数据报长度理论上是IP最大数据报长度减去IP首部的长度，但是实际上还是和应用程序的接收现在有关。<br>2、UDP的三大运用  </li>
+<li>查询类，例如DNS   </li>
+<li>实时流量，如语音 视频 </li>
+<li>传输数据，如TFTP，主要用于在资源有限的设备搭建TFTP服务器，来传输文件，升级系统</li>
+</ul>
+<h3 id="广播和多播（组播）"><a href="#广播和多播（组播）" class="headerlink" title="广播和多播（组播）"></a>广播和多播（组播）</h3><p>广播和多播仅应用于UDP，TCP一定是单播，肯定不能多播和组播。<br>多播是在设备驱动程序层被过滤的:如果网卡未订阅该多播，则直接在硬件层面丢弃，不会上传到网络层。<br>广播能一直传到传输层UDP处，检查目标端口是否有应用监听，若无监听就丢弃。<br>1、广播<br>广播地址受限广播：255.255.255.255（仅本地网络）子网定向广播：192.168.1.255（特定子网）<br>处理流程：<br>    - 网卡层：必须接收MAC广播帧（FF:FF:FF:FF:FF:FF）<br>    - IP层：校验目标IP是否为有效广播地址<br>    - 传输层：UDP：提交给绑定端口的应用；TCP：直接拒绝（违反连接语义）<br>2、多播<br>多播组地址：最高4bit位是1110的D类地址，范围是224.0.0.0 ~239.255.255.255。多播的MAC地址是01：00：5e：00：00：00 ~ 01：00：5e：7f：ff：ff。IP地址到mac地址的映射不是唯一的，因此会出现多个<br>IP地址对于一个MAC地址，所以设备驱动程序或IP层就必须对数据报进行过滤，以避免接收到主机不想接收的多播数据帧<br>处理流程：<br>    - 网卡层：基于IGMP&#x2F;MLD维护的多播MAC列表过滤；硬件级过滤未订阅的组播帧（优化性能）<br>    - IP层：校验目标IP是否在已加入的多播组<br>    - 传输层：检查是否有应用绑定多播IP+端口  </p>
+<h3 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h3><p>1、简介<br>域名系统，是一种用于TCP&#x2F;IP应用程序的分布式数据库，提供主机名到IP地址之间的转换和电子邮件的选路信息。对DNS的访问是通过一个地址解析器来完成的（windows上可以用nsloookup来查看），解析器通常是<br>应用程序的一部分，并不涉及到操作系统的内核。<br>DNS 的名字空间和UNIx的文件系统类似，具有层次结构&#x2F;树结构。命名标识不区分大小写，命名树上任何一个节点的域名就是将该节点到最高层的域名串连起来中间使用‘.’来分割这些域名。<br><img src="DNS%E6%A0%91%E5%BD%A2%E7%BB%93%E6%9E%84.png" alt="DNS树形结构"><br>2、 报文格式<br><img src="DNS%E6%8A%A5%E6%96%87%E6%A0%BC%E5%BC%8F.png" alt="DNS报文格式">  </p>
+<ul>
+<li>标识，有客户程序设置并由服务器返回结果。客户程序通过它来缺点响应哈查询是否匹配。</li>
+<li>16bit标志字段被划分成若干字段:<ul>
+<li>QR 1bit,0表示查询报文，1表示响应报文。</li>
+<li>opcode 4bit，通常值：0标准查询，1反向查询，2服务器状态请求。</li>
+<li>AA 1bit，表示授权回答。</li>
+<li>TC 1bit,表示截断的。DNS只能会512字节，大于了512就会被截断</li>
+<li>RD 1bit，表示期望递归。</li>
+<li>RA 1bit，表示可以递归。</li>
+<li>zero 3bit，保留位，必须为0.</li>
+<li>rcode 4bit返回码字段，响应码（0&#x3D;无错误，2&#x3D;服务器失败，3&#x3D;域名不存在，4&#x3D;查询类型不支持）。</li>
+</ul>
+</li>
+<li>问题部分：<ul>
+<li>QNAME	域名（可变长度，格式如 3www7example3com0，以 0 结束）</li>
+<li>QTYPE	查询类型（2 字节，如 A&#x3D;1、AAAA&#x3D;28、MX&#x3D;15、CNAME&#x3D;5）</li>
+<li>QCLASS	查询类（通常为 1，表示 Internet（IN））</li>
+</ul>
+</li>
+<li>回答部分：<ul>
+<li>NAME	域名（可能使用压缩指针，如 0xC00C 指向报文中的已有域名）</li>
+<li>TYPE	记录类型（同 QTYPE）</li>
+<li>CLASS	记录类（同 QCLASS）</li>
+<li>TTL	生存时间（4 字节，单位秒，控制缓存有效期）</li>
+<li>RDLENGTH	数据长度（2 字节）</li>
+<li>RDATA	记录数据（可变长度，如 A 记录为 4 字节 IPv4 地址）<br>3、工作流程<br>以访问<a target="_blank" rel="noopener" href="http://www.baidu.com为例./">www.baidu.com为例。</a></li>
+</ul>
+</li>
+<li>客户端发起查询：用户在浏览器输入 <a target="_blank" rel="noopener" href="http://www.baidu.com/">www.baidu.com</a> ;操作系统检测本地DNS缓存；如果无缓存，则向配置的 递归解析器（如8.8.8.8）发送DNS请求。  </li>
+<li>递归解析器处理：查看自身DNS缓存；若无缓存，开始迭代查询。<br>-结果返回与缓存：递归解析器将 IP 地址返回给客户端，并缓存结果（根据记录的 TTL 值）。客户端收到 IP 地址，建立 TCP 连接访问网站。</li>
+</ul>
+<h3 id="TFTP"><a href="#TFTP" class="headerlink" title="TFTP"></a>TFTP</h3><p>1、介绍<br>TFTP是一种基于 UDP&#x2F;69 端口 的轻量级文件传输协议，常用于网络设备固件更新、无盘工作站启动等场景。其报文结构简单，分为 5 种类型，每种类型有固定格式。<br>主要是停止等待协议，发一个数据报，就要等待接收到确认后再发第二个包。<br>2、TFTP报文格式<br><img src="TFTP%E6%8A%A5%E6%96%87%E6%A0%BC%E5%BC%8F.png" alt="TFTP报文格式">   </p>
+<ul>
+<li>操作码：  <ul>
+<li>1	RRQ，客户端 → 服务器	读请求（下载文件）</li>
+<li>2	WRQ，客户端 → 服务器	写请求（上传文件）</li>
+<li>3	DATA，双向	数据块传输</li>
+<li>4	ACK，双向	确认接收</li>
+<li>5	ERROR，双向	错误通知</li>
+</ul>
+</li>
+<li>Opcode &#x3D; 1&#x2F;2 RRQ&#x2F;WRQ（读&#x2F;写请求）时：<ul>
+<li>Filename：请求传输的文件名（以 0x00 结尾）。</li>
+<li>Mode：传输模式（字符串，以 0x00 结尾）：netascii：文本模式（ASCII 转换）；octet：二进制模式（原始字节流）。</li>
+</ul>
+</li>
+<li>Opcode &#x3D; 3 DATA（数据块）：<ul>
+<li>Block #：数据块编号（从 1 开始递增）。</li>
+<li>Data：文件数据（最大 512 字节）。如果数据 &lt;512 字节：表示文件传输结束。</li>
+</ul>
+</li>
+<li>Opcode &#x3D; 4 确认 <ul>
+<li>Block #：确认的数据块编号（与 DATA 的 Block # 对应）。</li>
+</ul>
+</li>
+<li>Opcode &#x3D; 5 错误：<ul>
+<li>Error Code：错误码。0	未定义错误；1	文件未找到；2	访问权限拒绝；3 磁盘已满；4 非法操作（如不支持 WRQ）；5 未知传输ID（端口号错误）；6 文件已存在（WRQ 冲突）；7 无此用户（已废弃）</li>
+<li>ErrMsg：人类可读的错误描述（以 0x00 结尾）。<br>3、TFTP工作流程简介<br>文件下载流程：</li>
+</ul>
+</li>
+<li>客户端发起读请求（RRQ）-》服务器响应数据块（DATA）-》客户端确认接收（ACK）-》循环传输直至完成<br>文件上传流程：</li>
+<li>客户端发起写请求（WRQ）-》服务器响应初始ACK（Block #&#x3D;0）-》客户端发送数据块（DATA）-》服务器确认接收（ACK）-》循环传输直至完成</li>
+</ul>
+<h3 id="TCP"><a href="#TCP" class="headerlink" title="TCP"></a>TCP</h3><p>1、介绍<br>TCP提供一种面向连接的、可靠的字节流服务，这意味着两个使用TCP的应用在交换数据之前必须先建立一个TCP连接，且在一个TCP连接中仅有两方进行通信，不存在广播和多播。<br>TCP通过以下方式来提供可靠性：<br>    - 应用数据会被封给成TCP认为合适的数据库大小（MSS）<br>    - 当TCP发送出一个段后，会启用一个定时器，等待目的端确认收到这个报文段，如果没有及时收到确认，则重发报文段<br>    - 当TCP收到另外一端的数据，可以不立马发送确认，可以等一会儿再发（取决于滑动窗口大小），确认ACK也可以跟着数据一起发送回去–捎带确认<br>    - TCP包到达目的端会失序，因此接收端会对收到的数据重新排序后发送给上层应用  </p>
+<p>2、TCP报文格式<br><img src="TCP%E6%8A%A5%E6%96%87%E6%A0%BC%E5%BC%8F.c" alt="TCP报文格式">  </p>
+<ul>
+<li>源目端口号用于寻找发送端和接收端的应用程序，这两个值加上IP首部的源目IP地址可以确定唯一一个TCP连接  </li>
+<li>序号，用于标识发送的数据字节流，表示在这个报文段中的第一个数据字节。没发送完x个字节的数据，序号都会+x+1,即使没有数据，SYN&#x2F;FIN包也会消耗一个序号  </li>
+<li>确认序号，为上次已经收到的数据字节序号+1，重要ACK标记时，确认序号才有效  </li>
+<li>六个标准位：URG-紧急指针 ACK-确认序号有效 PSH-接收方应该尽快将报文段交给应用层 RST-重建连接 SYN-同步序号发起一个连接 FIN-完成发送任务,请求断开连接。<br>TCP为应用层提供全双工服务，数据能够在两个方向独立的传输，因此每一端都必须保持每个方向上的传输数据序号。</li>
+</ul>
+<p>3、三次握手&#x2F;四次挥手  </p>
+<ul>
+<li>三次握手（SYN, SYN+ACK, ACK）<br> Client                  Server<br>   |—-SYN(seq&#x3D;x)—–&gt;|<br>   |&lt;—SYN(seq&#x3D;y),ACK–|<br>   |—-ACK(seq&#x3D;x+1)—&gt;|<br> 客户端调用 connect()|服务端调用 accept()，进入 SYN_RCVD|双方建立连接，进入 ESTABLISHED</li>
+<li>四次挥手<br>  Client           Server<br>|—-FIN(x)—&gt;|<br>|&lt;—ACK(x+1)–|<br>|&lt;—FIN(y)—-|<br>|—-ACK(y+1)-&gt;|<br>  被动关闭方在收到 FIN 后进入 CLOSE_WAIT|主动关闭方最终进入 TIME_WAIT</li>
+</ul>
+<p>4、流量控制与拥塞控制</p>
+<ul>
+<li>流量控制（基于接收端通告窗口 rcv_wnd），防止发送方过快发送，接收方来不及处理：每次 ACK 都会更新窗口大小</li>
+<li>拥塞控制（基于网络拥堵状态）：慢启动（Slow Start）；拥塞避免（Congestion Avoidance）；快重传 &amp; 快恢复（Fast Retransmit&#x2F;Recovery）<br>  现在有 拥塞窗口：cwnd 接收端通告窗口：rwnd  慢启动门限：ssthresh<ul>
+<li>对于一个连接刚开始时 cwnd 设置为 1MSS ssthresh 设置为 65535字节。然后接收端每次收到一个ACK时都会将cwnd 翻倍</li>
+<li>TCP 输出的报文数量不能超过 cwnd和rwnd的最小值</li>
+<li>当网络发生拥塞时（收到1重复确认或者丢包时），就将 ssthresh 设置为当前 cwnd 大小的一般，然后cwnd重新设置为 1（这就是慢启动），<br>  然后在cwnd小于 ssthresh 时，就以每收到一个ACK翻倍增加；大于 ssthresh时，每收到一个ACK时，增加 ssthresh 的一半 （拥塞避免-超时重传<br>  快重传，收到3个连续的ACK就重传对应的包。<br>  快恢复，快重传后就继续进行拥塞避免算法而不是慢启动（快重传并不是网络不好，如果执行慢启动就比较浪费资源）</li>
+</ul>
+</li>
+</ul>
+<p>5、状态机与定时器</p>
+<ul>
+<li><p>状态转移图（RFC 793）<br>  server:		<br>  LISTEN(等待连接请求) → SYN_RCVD(接收 SYN 后，回应 SYN+ACK) → ESTABLISHED(连接建立，数据传输阶段) → CLOSE_WAIT(被动关闭一方收到 FIN 后进入，准备关闭连接)<br>  → LAST_ACK(被动关闭方发送 FIN 后等待对方 ACK) →  CLOSED(连接已关闭)<br>  client:<br>  SYN_SENT(发送了连接请求SYN) → ESTABLISHED(连接建立，数据传输阶段) → FIN_WAIT_1 → FIN_WAIT_2 → TIME_WAIT(主动关闭方收到对方 FIN 后进入，等待 2MSL 时间) → CLOSED<br>  FIN_WAIT_1 &#x2F; 2：主动关闭连接后的两个中间状态。</p>
+</li>
+<li><p>四种定时器<br>  重传定时器（Retransmission）:超时重传未被确认的数据包。每次发送数据段时启动此定时器，如果超时还未收到 ACK，就触发重传，超时时间通过RTT动态计算。<br>  保活定时器（Keepalive）：检测连接是否存活。长时间没有数据交换时，发送一个“保活探测包”。若对方无响应，重发探测最多 n 次（例如 BSD 中为 8 次），超出次数则关闭连接。<br>  2MSL定时器（Time-Wait）：确保连接中延迟的报文完全消失。2MSL &#x3D; 2 × 最大报文生存时间（MSL，一般为 30s~2min）。TCP 连接进入 TIME_WAIT 状态后，保持 2MSL 时长，再彻底关闭连接。 防止“旧连接包”干扰新的连接。<br>  持续定时器（Persist）： 避免接收窗口为0时发生死锁。 如果接收方通告窗口为 0，发送方停止发送数据，并启动 Persist Timer。该定时器触发时，发送窗口探测报文，试探接收方是否恢复了窗口。</p>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      
+      
+      
+      
+      
+      
+      
+
+    </footer>
+  </div>
+  
+  <nav id="article-nav" data-aos="fade-up">
+    
+    
+    <div class="article-nav-link-wrap article-nav-link-right">
+      
+        
+        
+          <img data-src="/covers/03.jpg" data-sizes="auto" alt="IP层相关协议" class="lazyload">
+        
+      
+      <a href="/2025/07/26/IP%E5%B1%82%E7%9B%B8%E5%85%B3%E5%8D%8F%E8%AE%AE/"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+        
+          IP层相关协议
+        
+      </h3>
+    </div>
+    
+  </nav>
+
+
+</article>
+
+
+
+
+
+
+</section>
+          
+            <aside id="sidebar">
+  <div class="sidebar-wrapper wrap-sticky">
+    <div class="sidebar-wrap" data-aos="fade-up">
+      
+        <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#UDP"><span class="toc-number">1.</span> <span class="toc-text">UDP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B9%BF%E6%92%AD%E5%92%8C%E5%A4%9A%E6%92%AD%EF%BC%88%E7%BB%84%E6%92%AD%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">广播和多播（组播）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DNS"><span class="toc-number">3.</span> <span class="toc-text">DNS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TFTP"><span class="toc-number">4.</span> <span class="toc-text">TFTP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP"><span class="toc-number">5.</span> <span class="toc-text">TCP</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="挺凉歙" class="lazyload">
+  <div class="sidebar-author-name">挺凉歙</div>
+  <div class="sidebar-description"></div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">16</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">0</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">0</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+      
+      
+        <div class="sidebar-btn-wrapper" style="position:static">
+          <div class="sidebar-toc-btn current"></div>
+          <div class="sidebar-common-btn"></div>
+        </div>
+      
+    </div>
+  </div>
+
+  
+</aside>
+
+          
+        </div>
+        <footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    
+    <div>
+      <span class="icon-copyright"></span>
+      2020-2025
+      <span class="footer-info-sep rotate"></span>
+      挺凉歙
+    </div>
+    
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener external nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+    
+    
+      <div>
+        <span class="icon-brush"></span>
+        25.1k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        01:37
+      </div>
+    
+    
+    
+    
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+    
+  </div>
+</footer>
+
+        
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav">
+  <div class="sidebar-wrap">
+    
+      <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#UDP"><span class="toc-number">1.</span> <span class="toc-text">UDP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B9%BF%E6%92%AD%E5%92%8C%E5%A4%9A%E6%92%AD%EF%BC%88%E7%BB%84%E6%92%AD%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">广播和多播（组播）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DNS"><span class="toc-number">3.</span> <span class="toc-text">DNS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TFTP"><span class="toc-number">4.</span> <span class="toc-text">TFTP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP"><span class="toc-number">5.</span> <span class="toc-text">TCP</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+      <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="挺凉歙" class="lazyload">
+  <div class="sidebar-author-name">挺凉歙</div>
+  <div class="sidebar-description"></div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">16</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">0</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">0</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+    
+  </div>
+  
+    <div class="sidebar-btn-wrapper">
+      <div class="sidebar-toc-btn current"></div>
+      <div class="sidebar-common-btn"></div>
+    </div>
+  
+</nav>
+
+    </div>
+    
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+
+
+
+
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.0.6/dist/index.umd.js" integrity="sha384-vkGvf25gm1C1PbcoD5dNfc137HzNL&#x2F;hr1RKA5HniJOaawtvUmH5lTVFgFAruE9Ge" crossorigin="anonymous"></script>
+
+  <script>
+    window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["#ff5252","#ff7c7c","#ffafaf","#ffd0d0"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["#ff0000"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'))
+  </script>
+
+
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+    
+    
+      
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+    
+    
+      <script type="module" data-pjax>
+        const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+        
+        const pswp = () => {
+          if (_$$('.article-entry a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-entry',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          if(_$$('.article-gallery a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-gallery',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          window.lightboxStatus = 'done';
+          window.removeEventListener('lightbox:ready', pswp);
+        }
+        if(window.lightboxStatus === 'ready') {
+          pswp()
+        } else {
+          window.addEventListener('lightbox:ready', pswp);
+        }
+      </script>
+      
+
+
+
+
+
+
+
+
+    
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.1.0' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+
+  </body>
+  </html>
+
