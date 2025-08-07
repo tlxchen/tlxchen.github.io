@@ -1,0 +1,691 @@
+
+  <!DOCTYPE html>
+  <html lang="zh-CN"  >
+  <head>
+  <meta charset="utf-8">
+  
+
+  
+
+  
+
+  <script>window.REIMU_CONFIG = {};window.REIMU_CONFIG.icon_font = '4552607_tq6stt6tcg';window.REIMU_CONFIG.clipboard_tips = {"success":"复制成功(*^▽^*)","fail":"复制失败 (ﾟ⊿ﾟ)ﾂ","copyright":{"enable":false,"count":50,"content":"本文版权：本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！"}};window.REIMU_CONFIG.code_block = {"expand":true};</script>
+  
+  <title>
+    TFTP_cliet |
+    
+    TLX的主页
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic&display=swap" media="print" onload="this.media&#x3D;&#39;all&#39;">
+  
+    <link rel="preload" href="//at.alicdn.com/t/c/font_4552607_tq6stt6tcg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  
+  
+    
+<link rel="stylesheet" href="/css/loader.css">
+
+  
+  
+    <meta name="description" content="一、TFTP 协议基础协议概述 TFTP（Trivial File Transfer Protocol）是一种简单的文件传输协议，基于 UDP 实现，无连接、轻量级，常用于网络设备启动或嵌入式环境。 端口号：69（服务器监听）。 传输模式：通常使用“octet”（二进制）和“netascii”（文本）两种模式。  报文格式   操作码 含义 报文格式描述    1 RRQ 2 字节 Opcode">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TFTP_cliet">
+<meta property="og:url" content="http://tlxchen.github.io/2025/08/07/TFTP-cliet/index.html">
+<meta property="og:site_name" content="TLX的主页">
+<meta property="og:description" content="一、TFTP 协议基础协议概述 TFTP（Trivial File Transfer Protocol）是一种简单的文件传输协议，基于 UDP 实现，无连接、轻量级，常用于网络设备启动或嵌入式环境。 端口号：69（服务器监听）。 传输模式：通常使用“octet”（二进制）和“netascii”（文本）两种模式。  报文格式   操作码 含义 报文格式描述    1 RRQ 2 字节 Opcode">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-08-07T12:06:21.000Z">
+<meta property="article:modified_time" content="2025-08-07T12:52:01.009Z">
+<meta property="article:author" content="挺凉歙">
+<meta name="twitter:card" content="summary">
+  
+  
+    <link rel="alternate" href="/atom.xml" title="TLX的主页" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="preload" href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+  
+  
+  
+    
+<script src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js" integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script>
+
+  
+  
+    
+<link rel="stylesheet" href="https://npm.webcache.cn/@reimujs/aos@0.1.0/dist/aos.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    
+  <div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi">
+        
+          <svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+           M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg>
+        
+      </div>
+      <div class="loading-word">少女祈祷中...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script>
+
+<div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+
+
+    <div id="container">
+      <div id="wrap">
+        <div id="header-nav">
+  <nav id="main-nav">
+    
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/">首页</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/archives">归档</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/about">关于</a>
+        </span>
+      
+        <span class="main-nav-link-wrap">
+          <div class="main-nav-icon icon rotate">
+            &#xe62b;
+          </div>
+          <a class="main-nav-link" href="/friend">友链</a>
+        </span>
+      
+    
+    <a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav">
+    
+      <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS 订阅" target="_blank"></a>
+    
+    
+    
+  </nav>
+</div>
+<header id="header">
+  
+    
+      <img fetchpriority="high" src="/images/banner.webp" alt="TFTP_cliet">
+    
+  
+  <div id="header-outer">
+    <div id="header-title">
+      
+        
+        
+          <a href="/" id="logo">
+            <h1 data-aos="slide-up">TFTP_cliet</h1>
+          </a>
+        
+      
+      
+        
+        <h2 id="subtitle-wrap" data-aos="slide-down">
+          
+        </h2>
+      
+    </div>
+  </div>
+</header>
+
+        <div id="content">
+          
+          <section id="main"><article id="post-TFTP-cliet" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-inner" data-aos="fade-up">
+    <div class="article-meta">
+      <div class="article-date">
+  <a href="/2025/08/07/TFTP-cliet/" class="article-date-link" data-aos="zoom-in">
+    <time datetime="2025-08-07T12:06:21.000Z" itemprop="datePublished">2025-08-07</time>
+    <time style="display: none;" id="post-update-time">2025-08-07</time>
+  </a>
+</div>
+
+      
+
+    </div>
+    <div class="hr-line"></div>
+    
+
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+      
+        <h3 id="一、TFTP-协议基础"><a href="#一、TFTP-协议基础" class="headerlink" title="一、TFTP 协议基础"></a>一、TFTP 协议基础</h3><h4 id="协议概述"><a href="#协议概述" class="headerlink" title="协议概述"></a>协议概述</h4><ul>
+<li>TFTP（Trivial File Transfer Protocol）是一种简单的文件传输协议，基于 UDP 实现，无连接、轻量级，常用于网络设备启动或嵌入式环境。</li>
+<li>端口号：69（服务器监听）。</li>
+<li>传输模式：通常使用“octet”（二进制）和“netascii”（文本）两种模式。</li>
+</ul>
+<h4 id="报文格式"><a href="#报文格式" class="headerlink" title="报文格式"></a>报文格式</h4><table>
+<thead>
+<tr>
+<th>操作码</th>
+<th>含义</th>
+<th>报文格式描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>RRQ</td>
+<td>2 字节 Opcode + 文件名 + 0 + 模式 + 0</td>
+</tr>
+<tr>
+<td>2</td>
+<td>WRQ</td>
+<td>同上</td>
+</tr>
+<tr>
+<td>3</td>
+<td>DATA</td>
+<td>Opcode(2B) + Block#(2B) + Data(0-512B)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>ACK</td>
+<td>Opcode(2B) + Block#(2B)</td>
+</tr>
+<tr>
+<td>5</td>
+<td>ERROR</td>
+<td>Opcode(2B) + ErrorCode(2B) + ErrMsg + 0</td>
+</tr>
+</tbody></table>
+<h4 id="传输流程"><a href="#传输流程" class="headerlink" title="传输流程"></a>传输流程</h4><h5 id="读取文件（RRQ）"><a href="#读取文件（RRQ）" class="headerlink" title="读取文件（RRQ）"></a>读取文件（RRQ）</h5><ol>
+<li>客户端向服务器发送 RRQ 请求，包含文件名和传输模式。</li>
+<li>服务器回复第一个 DATA 数据包（块号从1开始）。</li>
+<li>客户端写入数据并发送对应 ACK。</li>
+<li>服务器发送下一块 DATA。</li>
+<li>重复以上步骤，直到收到数据长度小于 512 字节，表示文件传输结束。</li>
+</ol>
+<h5 id="写入文件（WRQ）"><a href="#写入文件（WRQ）" class="headerlink" title="写入文件（WRQ）"></a>写入文件（WRQ）</h5><ol>
+<li>客户端发送 WRQ 请求，告知服务器准备上传文件。</li>
+<li>服务器回应 ACK (块号 0)，表示可以开始发送数据。</li>
+<li>客户端从块号 1 开始发送 DATA。</li>
+<li>服务器对每个 DATA 发送 ACK。</li>
+<li>当客户端发送最后一块数据，且数据长度小于 512 字节时，传输完成。</li>
+</ol>
+<h4 id="传输可靠性"><a href="#传输可靠性" class="headerlink" title="传输可靠性"></a>传输可靠性</h4><ul>
+<li>TFTP 使用简单的停止等待（Stop-and-Wait）机制。</li>
+<li>每个数据包发送后等待对应 ACK，超时重传。</li>
+<li>支持重传次数限制，超过则中断传输。</li>
+</ul>
+<hr>
+<h3 id="二、程序结构与设计"><a href="#二、程序结构与设计" class="headerlink" title="二、程序结构与设计"></a>二、程序结构与设计</h3><h4 id="主要数据结构"><a href="#主要数据结构" class="headerlink" title="主要数据结构"></a>主要数据结构</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">tftp_handle</span> &#123;</span></span><br><span class="line">    <span class="type">int</span> sockfd;                         <span class="comment">// UDP 套接字</span></span><br><span class="line">    <span class="type">int</span> request_mode;                   <span class="comment">// 请求类型：RRQ=1，WRQ=2</span></span><br><span class="line">    <span class="type">int</span> retry;                         <span class="comment">// 重试计数</span></span><br><span class="line">    <span class="type">int</span> block_idx;                     <span class="comment">// 当前块号（从1开始）</span></span><br><span class="line">    FILE *fp;                         <span class="comment">// 本地文件指针</span></span><br><span class="line">    <span class="type">char</span> filename[<span class="number">256</span>];               <span class="comment">// 文件名</span></span><br><span class="line">    <span class="type">char</span> encode[<span class="number">16</span>];                  <span class="comment">// 传输模式 &quot;octet&quot; 或 &quot;netascii&quot;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">server_addr</span>;</span>  <span class="comment">// 服务器地址</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">client_addr</span>;</span>  <span class="comment">// 客户端地址（接收端地址）</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h4 id="核心函数设计"><a href="#核心函数设计" class="headerlink" title="核心函数设计"></a>核心函数设计</h4><ul>
+<li>socket_init()<br>  创建 UDP 套接字。<br>  初始化服务器地址结构。<br>  打开本地文件，RRQ 以写入模式打开文件（接收数据），WRQ 以读取模式打开（发送数据）。<br>  参数校验（文件名长度、IP 地址格式）。</li>
+<li>send_request()<br>  构造 RRQ 或 WRQ 请求报文。<br>  格式为：Opcode(2B) + 文件名 + 0 + 传输模式 + 0。<br>  使用 sendto() 发送给服务器69端口。</li>
+<li>Read_data()<br>  通过 recvfrom() 接收 DATA 报文。<br>  验证操作码是否为 DATA。<br>  检查块号是否符合预期（防止重复或乱序）。<br>  将数据写入本地文件。<br>  发送 ACK 给服务器确认收到。<br>  处理重复包，发送 ACK 并重试，防止丢包。<br>  返回数据长度，数据长度小于512字节时认为传输结束。</li>
+<li>Write_data()<br>  初次调用时等待服务器对 WRQ 的 ACK（块号0）,以便初始化 client_addr。<br>  读取本地文件数据，封装成 DATA 报文发送。<br>  等待服务器 ACK，支持重传机制。<br>  检查 ACK 的块号，防止重复 ACK。<br>  发送完最后一块（&lt;512字节）数据后结束。</li>
+<li>send_ack()<br>  构造 ACK 包（Opcode&#x3D;4，Block#）。<br>  发送给服务器，确认数据包接收。</li>
+<li>resource_free()<br>  关闭文件和套接字，释放资源。</li>
+</ul>
+<h4 id="错误处理机制"><a href="#错误处理机制" class="headerlink" title="错误处理机制"></a>错误处理机制</h4><p>超时和重传：重试计数 retry，超过最大次数后停止传输。<br>收到错误报文（Opcode&#x3D;5）后终止传输。<br>文件打开失败、网络异常等均有提示并终止。</p>
+<h4 id="程序流程简述"><a href="#程序流程简述" class="headerlink" title="程序流程简述"></a>程序流程简述</h4><p>初始化套接字和文件。 -&gt;<br>发送 RRQ&#x2F;WRQ 请求。 -&gt;<br>进入数据收发循环：{	RRQ：调用 Read_data() 循环接收数据包并 ACK。WRQ：调用 Write_data() 循环发送数据包并等待 ACK。 } -&gt;<br>传输完成后释放资源。 </p>
+<h3 id="抓包分析"><a href="#抓包分析" class="headerlink" title="抓包分析"></a>抓包分析</h3><h4 id="调用-Write-模式时-抓包"><a href="#调用-Write-模式时-抓包" class="headerlink" title="调用 Write 模式时 抓包"></a>调用 Write 模式时 抓包</h4><p>!(block0)[TFTP-cliet.&#x2F;TFTP_Write_block0.png]<br>客户端发 WRQ 请求给服务器 UDP 69 端口。<br>服务器收到 WRQ 后：会分配一个新的临时端口（非 69）作为后续数据传输的目标端口。这个在抓包中的表现为：服务器通过新的端口(58372)向客户端发送 ACK(block0)。<br>客户端socket收到这个 ACK 包需要“绑定”服务器的这个新端口（client_addr），确保后续的发送&#x2F;接收针对正确的端口。<br>!(last_packet)[TFTP-cliet.&#x2F;last_packet.png]<br>整个写的过程就是 客户端向服务器发送数据和block， 服务器向客户端回复ACK和已收到的block，当客户端发送的数据长度小于512时，就是最后一个包，发完就结束了。  </p>
+<h4 id="调用-Read-模式时-抓包"><a href="#调用-Read-模式时-抓包" class="headerlink" title="调用 Read 模式时 抓包"></a>调用 Read 模式时 抓包</h4><p>!(block0)[TFTP-cliet.&#x2F;read_request.png]<br>第一个包都是请求包，有请求的类型（读&#x2F;写），请求的文件名，文件的编码方式等，也只有请求包是和服务器的69端口在通讯，后面都是和服务器的一个随机端口通讯。<br>这个发包的过程和 Write 一样，只不过是服务器发数据包，客户端回复block号以表示确认。  </p>
+<h3 id="代码链接"><a href="#代码链接" class="headerlink" title="代码链接"></a>代码链接</h3><p><a target="_blank" rel="noopener" href="https://github.com/tlxchen/TFTP_Learn">https://github.com/tlxchen/TFTP_Learn</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+      
+      
+      
+      
+      
+      
+      
+
+    </footer>
+  </div>
+  
+  <nav id="article-nav" data-aos="fade-up">
+    
+    
+    <div class="article-nav-link-wrap article-nav-link-right">
+      
+        
+        
+          <img data-src="/covers/04.jpg" data-sizes="auto" alt="传输层相关协议" class="lazyload">
+        
+      
+      <a href="/2025/08/01/%E4%BC%A0%E8%BE%93%E5%B1%82%E7%9B%B8%E5%85%B3%E5%8D%8F%E8%AE%AE/"></a>
+      <div class="article-nav-caption">后一篇</div>
+      <h3 class="article-nav-title">
+        
+          传输层相关协议
+        
+      </h3>
+    </div>
+    
+  </nav>
+
+
+</article>
+
+
+
+
+
+
+</section>
+          
+            <aside id="sidebar">
+  <div class="sidebar-wrapper wrap-sticky">
+    <div class="sidebar-wrap" data-aos="fade-up">
+      
+        <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81TFTP-%E5%8D%8F%E8%AE%AE%E5%9F%BA%E7%A1%80"><span class="toc-number">1.</span> <span class="toc-text">一、TFTP 协议基础</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%8F%E8%AE%AE%E6%A6%82%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">协议概述</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8A%A5%E6%96%87%E6%A0%BC%E5%BC%8F"><span class="toc-number">1.2.</span> <span class="toc-text">报文格式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%A0%E8%BE%93%E6%B5%81%E7%A8%8B"><span class="toc-number">1.3.</span> <span class="toc-text">传输流程</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96%E6%96%87%E4%BB%B6%EF%BC%88RRQ%EF%BC%89"><span class="toc-number">1.3.1.</span> <span class="toc-text">读取文件（RRQ）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%86%99%E5%85%A5%E6%96%87%E4%BB%B6%EF%BC%88WRQ%EF%BC%89"><span class="toc-number">1.3.2.</span> <span class="toc-text">写入文件（WRQ）</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%A0%E8%BE%93%E5%8F%AF%E9%9D%A0%E6%80%A7"><span class="toc-number">1.4.</span> <span class="toc-text">传输可靠性</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%A8%8B%E5%BA%8F%E7%BB%93%E6%9E%84%E4%B8%8E%E8%AE%BE%E8%AE%A1"><span class="toc-number">2.</span> <span class="toc-text">二、程序结构与设计</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-number">2.1.</span> <span class="toc-text">主要数据结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E5%87%BD%E6%95%B0%E8%AE%BE%E8%AE%A1"><span class="toc-number">2.2.</span> <span class="toc-text">核心函数设计</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6"><span class="toc-number">2.3.</span> <span class="toc-text">错误处理机制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A8%8B%E5%BA%8F%E6%B5%81%E7%A8%8B%E7%AE%80%E8%BF%B0"><span class="toc-number">2.4.</span> <span class="toc-text">程序流程简述</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%93%E5%8C%85%E5%88%86%E6%9E%90"><span class="toc-number">3.</span> <span class="toc-text">抓包分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B0%83%E7%94%A8-Write-%E6%A8%A1%E5%BC%8F%E6%97%B6-%E6%8A%93%E5%8C%85"><span class="toc-number">3.1.</span> <span class="toc-text">调用 Write 模式时 抓包</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B0%83%E7%94%A8-Read-%E6%A8%A1%E5%BC%8F%E6%97%B6-%E6%8A%93%E5%8C%85"><span class="toc-number">3.2.</span> <span class="toc-text">调用 Read 模式时 抓包</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E9%93%BE%E6%8E%A5"><span class="toc-number">4.</span> <span class="toc-text">代码链接</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="挺凉歙" class="lazyload">
+  <div class="sidebar-author-name">挺凉歙</div>
+  <div class="sidebar-description"></div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">17</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">0</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">0</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+      
+      
+        <div class="sidebar-btn-wrapper" style="position:static">
+          <div class="sidebar-toc-btn current"></div>
+          <div class="sidebar-common-btn"></div>
+        </div>
+      
+    </div>
+  </div>
+
+  
+</aside>
+
+          
+        </div>
+        <footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info">
+    
+    <div>
+      <span class="icon-copyright"></span>
+      2020-2025
+      <span class="footer-info-sep rotate"></span>
+      挺凉歙
+    </div>
+    
+      <div>
+        基于&nbsp;<a href="https://hexo.io/" rel="noopener external nofollow noreferrer" target="_blank">Hexo</a>&nbsp;
+        Theme.<a href="https://github.com/D-Sketon/hexo-theme-reimu" rel="noopener external nofollow noreferrer" target="_blank">Reimu</a>
+      </div>
+    
+    
+      <div>
+        <span class="icon-brush"></span>
+        26.3k
+        &nbsp;|&nbsp;
+        <span class="icon-coffee"></span>
+        01:41
+      </div>
+    
+    
+    
+    
+      <div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv">总访问量&nbsp;<span id="busuanzi_value_site_pv"></span></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv">总访客量&nbsp;<span id="busuanzi_value_site_uv"></span></span>
+      </div>
+    
+  </div>
+</footer>
+
+        
+          <div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div>
+        
+        <div id="mask" class="hide"></div>
+      </div>
+      <nav id="mobile-nav">
+  <div class="sidebar-wrap">
+    
+      <div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class" >
+      
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81TFTP-%E5%8D%8F%E8%AE%AE%E5%9F%BA%E7%A1%80"><span class="toc-number">1.</span> <span class="toc-text">一、TFTP 协议基础</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%8F%E8%AE%AE%E6%A6%82%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">协议概述</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8A%A5%E6%96%87%E6%A0%BC%E5%BC%8F"><span class="toc-number">1.2.</span> <span class="toc-text">报文格式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%A0%E8%BE%93%E6%B5%81%E7%A8%8B"><span class="toc-number">1.3.</span> <span class="toc-text">传输流程</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96%E6%96%87%E4%BB%B6%EF%BC%88RRQ%EF%BC%89"><span class="toc-number">1.3.1.</span> <span class="toc-text">读取文件（RRQ）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%86%99%E5%85%A5%E6%96%87%E4%BB%B6%EF%BC%88WRQ%EF%BC%89"><span class="toc-number">1.3.2.</span> <span class="toc-text">写入文件（WRQ）</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%A0%E8%BE%93%E5%8F%AF%E9%9D%A0%E6%80%A7"><span class="toc-number">1.4.</span> <span class="toc-text">传输可靠性</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%A8%8B%E5%BA%8F%E7%BB%93%E6%9E%84%E4%B8%8E%E8%AE%BE%E8%AE%A1"><span class="toc-number">2.</span> <span class="toc-text">二、程序结构与设计</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-number">2.1.</span> <span class="toc-text">主要数据结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E5%87%BD%E6%95%B0%E8%AE%BE%E8%AE%A1"><span class="toc-number">2.2.</span> <span class="toc-text">核心函数设计</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6"><span class="toc-number">2.3.</span> <span class="toc-text">错误处理机制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A8%8B%E5%BA%8F%E6%B5%81%E7%A8%8B%E7%AE%80%E8%BF%B0"><span class="toc-number">2.4.</span> <span class="toc-text">程序流程简述</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%93%E5%8C%85%E5%88%86%E6%9E%90"><span class="toc-number">3.</span> <span class="toc-text">抓包分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B0%83%E7%94%A8-Write-%E6%A8%A1%E5%BC%8F%E6%97%B6-%E6%8A%93%E5%8C%85"><span class="toc-number">3.1.</span> <span class="toc-text">调用 Write 模式时 抓包</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B0%83%E7%94%A8-Read-%E6%A8%A1%E5%BC%8F%E6%97%B6-%E6%8A%93%E5%8C%85"><span class="toc-number">3.2.</span> <span class="toc-text">调用 Read 模式时 抓包</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E9%93%BE%E6%8E%A5"><span class="toc-number">4.</span> <span class="toc-text">代码链接</span></a></li></ol>
+      
+  </div>
+</div>
+</div>
+      <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img data-src="/avatar/avatar.webp" data-sizes="auto" alt="挺凉歙" class="lazyload">
+  <div class="sidebar-author-name">挺凉歙</div>
+  <div class="sidebar-description"></div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div>
+    <div class="sidebar-state-number">17</div>
+  </div>
+  <div class="sidebar-state-category">
+    <div>分类</div>
+    <div class="sidebar-state-number">0</div>
+  </div>
+  <div class="sidebar-state-tag">
+    <div>标签</div>
+    <div class="sidebar-state-number">0</div>
+  </div>
+</div>
+<div class="sidebar-social">
+  
+</div>
+<div class="sidebar-menu">
+  
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/" aria-label="首页"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">首页</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/archives" aria-label="归档"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">归档</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/about" aria-label="关于"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">关于</div>
+      </div>
+    
+      <div class="sidebar-menu-link-wrap">
+        <a class="sidebar-menu-link-dummy" href="/friend" aria-label="友链"></a>
+        <div class="sidebar-menu-icon icon rotate">
+          &#xe62b;
+        </div>
+        <div class="sidebar-menu-link">友链</div>
+      </div>
+    
+  
+</div>
+</div>
+    
+  </div>
+  
+    <div class="sidebar-btn-wrapper">
+      <div class="sidebar-toc-btn current"></div>
+      <div class="sidebar-common-btn"></div>
+    </div>
+  
+</nav>
+
+    </div>
+    
+    
+<script src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js" integrity="sha384-3gT&#x2F;vsepWkfz&#x2F;ff7PpWNUeMzeWoH3cDhm&#x2F;A8jM7ouoAK0&#x2F;fP&#x2F;9bcHHR5kHq2nf+e" crossorigin="anonymous"></script>
+
+
+<script src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js" integrity="sha384-J08i8An&#x2F;QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+  
+<script src="/js/aos.js"></script>
+
+  <script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', aosInit);
+    } else {
+      aosInit();
+    }
+  </script>
+
+
+
+<script src="/js/pjax_script.js" data-pjax></script>
+
+
+
+
+
+
+
+  
+<script src="https://npm.webcache.cn/mouse-firework@0.0.6/dist/index.umd.js" integrity="sha384-vkGvf25gm1C1PbcoD5dNfc137HzNL&#x2F;hr1RKA5HniJOaawtvUmH5lTVFgFAruE9Ge" crossorigin="anonymous"></script>
+
+  <script>
+    window.firework && window.firework(JSON.parse('{"excludeElements":["a","button"],"particles":[{"shape":"circle","move":["emit"],"easing":"easeOutExpo","colors":["#ff5252","#ff7c7c","#ffafaf","#ffd0d0"],"number":20,"duration":[1200,1800],"shapeOptions":{"radius":[16,32],"alpha":[0.3,0.5]}},{"shape":"circle","move":["diffuse"],"easing":"easeOutExpo","colors":["#ff0000"],"number":1,"duration":[1200,1800],"shapeOptions":{"radius":20,"alpha":[0.2,0.5],"lineWidth":6}}]}'))
+  </script>
+
+
+
+
+
+
+
+
+<div id="lazy-script">
+  <div>
+    
+    
+      
+        
+<script src="/js/insert_highlight.js" data-pjax></script>
+
+      
+    
+    
+      <script type="module" data-pjax>
+        const PhotoSwipeLightbox = (await safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js", "sha384-DiL6M/gG+wmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF/N6lrZi/")).default;
+        
+        const pswp = () => {
+          if (_$$('.article-entry a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-entry',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          if(_$$('.article-gallery a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-gallery',
+              children: 'a.article-gallery-item',
+              pswpModule: () => safeImport("https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8+oTJ7m3DfYEWX1fu1scuS4+s")
+            }).init();
+          }
+          window.lightboxStatus = 'done';
+          window.removeEventListener('lightbox:ready', pswp);
+        }
+        if(window.lightboxStatus === 'ready') {
+          pswp()
+        } else {
+          window.addEventListener('lightbox:ready', pswp);
+        }
+      </script>
+      
+
+
+
+
+
+
+
+
+    
+  </div>
+</div>
+
+
+  <script>
+    console.log(String.raw`%c 
+ ______     ______     __     __    __     __  __    
+/\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+\ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+ \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+  \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                  
+`,'color: #ff5252;')
+    console.log('%c Theme.Reimu v' + '1.1.0' + ' %c https://github.com/D-Sketon/hexo-theme-reimu ', 'color: white; background: #ff5252; padding:5px 0;', 'padding:4px;border:1px solid #ff5252;')
+  </script>
+  
+
+
+
+  
+<script src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js" integrity="sha384-0M75wtSkhjIInv4coYlaJU83+OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id+S" crossorigin="anonymous" async></script>
+
+
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+</script>
+
+
+
+
+  </body>
+  </html>
+
